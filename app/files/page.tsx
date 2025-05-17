@@ -1,0 +1,15 @@
+import { FileUploader } from "@/components/file-uploader"
+import { FileList } from "@/components/file-list"
+
+export default function FilesPage() {
+  return (
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6">Gestion des fichiers</h1>
+
+      <div className="grid grid-cols-1 gap-8">
+        <FileUploader />
+        <FileList />
+      </div>
+    </div>
+  )
+}

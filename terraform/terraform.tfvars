@@ -1,0 +1,9 @@
+aws_region     = "us-east-1"
+s3_bucket_name = "my-app-files-bucket"
+vpc_id         = "vpc-12345678" # Replace with your VPC ID
+subnet_ids     = ["subnet-12345678", "subnet-87654321"] # Replace with your subnet IDs
+db_name        = "appdb"
+db_username    = "admin"
+db_password    = "YourStrongPasswordHere" # Replace with a secure password
+key_name       = "your-key-pair" # Replace with your key pair name
+github_repo    = "https://github.com/yourusername/your-repo.git" # Replace with your GitHub repo
