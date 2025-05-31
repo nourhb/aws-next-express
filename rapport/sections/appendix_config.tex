@@ -1,0 +1,705 @@
+\chapter{Annexes - Configurations Avancées}
+
+\section{Configurations Infrastructure}
+
+\subsection{Terraform Infrastructure}
+
+\begin{lstlisting}[language=HCL, caption=terraform/main.tf]
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  
+  backend "s3" {
+    bucket = "aws-next-express-terraform-state"
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+  
+  default_tags {
+    tags = {
+      Project     = "aws-next-express"
+      Environment = var.environment
+      ManagedBy   = "terraform"
+    }
+  }
+}
+
+# Variables
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "development"
+}
+
+variable "project_name" {
+  description = "Project name"
+  type        = string
+  default     = "aws-next-express"
+}
+
+# DynamoDB Table
+resource "aws_dynamodb_table" "users" {
+  name           = "${var.project_name}-users-${var.environment}"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "id"
+  
+  attribute {
+    name = "id"
+    type = "S"
+  }
+  
+  attribute {
+    name = "email"
+    type = "S"
+  }
+  
+  global_secondary_index {
+    name            = "EmailIndex"
+    hash_key        = "email"
+    projection_type = "ALL"
+  }
+  
+  tags = {
+    Name = "${var.project_name}-users-${var.environment}"
+  }
+}
+
+# S3 Bucket
+resource "aws_s3_bucket" "storage" {
+  bucket = "${var.project_name}-storage-${var.environment}"
+}
+
+resource "aws_s3_bucket_public_access_block" "storage" {
+  bucket = aws_s3_bucket.storage.id
+  
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "storage" {
+  bucket = aws_s3_bucket.storage.id
+  
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# IAM Role for EKS
+resource "aws_iam_role" "eks_node_group" {
+  name = "${var.project_name}-eks-node-group-${var.environment}"
+  
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+    Version = "2012-10-17"
+  })
+}
+
+# Outputs
+output "dynamodb_table_name" {
+  description = "Name of the DynamoDB table"
+  value       = aws_dynamodb_table.users.name
+}
+
+output "s3_bucket_name" {
+  description = "Name of the S3 bucket"
+  value       = aws_s3_bucket.storage.bucket
+}
+\end{lstlisting}
+
+\subsection{Configuration AWS CLI}
+
+\begin{lstlisting}[language=bash, caption=aws-config.sh]
+#!/bin/bash
+
+# AWS CLI Configuration Script for AWS Next Express
+
+set -e
+
+echo "🔧 Configuring AWS CLI for AWS Next Express"
+echo "============================================="
+
+# Check if AWS CLI is installed
+if ! command -v aws &> /dev/null; then
+    echo "❌ AWS CLI is not installed. Please install it first."
+    echo "📖 Installation guide: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+    exit 1
+fi
+
+# Check if AWS credentials are configured
+if ! aws sts get-caller-identity &> /dev/null; then
+    echo "🔑 AWS credentials not found. Starting configuration..."
+    aws configure
+else
+    echo "✅ AWS credentials already configured"
+    aws sts get-caller-identity
+fi
+
+# Set AWS region if not set
+if [ -z "$AWS_REGION" ]; then
+    export AWS_REGION="us-east-1"
+    echo "🌍 AWS region set to: $AWS_REGION"
+fi
+
+# Create S3 bucket for Terraform state (if using Terraform)
+TERRAFORM_BUCKET="aws-next-express-terraform-state"
+if ! aws s3api head-bucket --bucket "$TERRAFORM_BUCKET" 2>/dev/null; then
+    echo "📦 Creating Terraform state bucket: $TERRAFORM_BUCKET"
+    aws s3api create-bucket --bucket "$TERRAFORM_BUCKET" --region "$AWS_REGION"
+    aws s3api put-bucket-versioning --bucket "$TERRAFORM_BUCKET" --versioning-configuration Status=Enabled
+    aws s3api put-bucket-encryption --bucket "$TERRAFORM_BUCKET" --server-side-encryption-configuration '{
+        "Rules": [
+            {
+                "ApplyServerSideEncryptionByDefault": {
+                    "SSEAlgorithm": "AES256"
+                }
+            }
+        ]
+    }'
+fi
+
+# Create application S3 bucket
+APP_BUCKET="aws-next-express-storage"
+if ! aws s3api head-bucket --bucket "$APP_BUCKET" 2>/dev/null; then
+    echo "📦 Creating application storage bucket: $APP_BUCKET"
+    aws s3api create-bucket --bucket "$APP_BUCKET" --region "$AWS_REGION"
+    aws s3api put-bucket-encryption --bucket "$APP_BUCKET" --server-side-encryption-configuration '{
+        "Rules": [
+            {
+                "ApplyServerSideEncryptionByDefault": {
+                    "SSEAlgorithm": "AES256"
+                }
+            }
+        ]
+    }'
+fi
+
+# Create DynamoDB table
+TABLE_NAME="users"
+if ! aws dynamodb describe-table --table-name "$TABLE_NAME" &>/dev/null; then
+    echo "🗄️  Creating DynamoDB table: $TABLE_NAME"
+    aws dynamodb create-table \
+        --table-name "$TABLE_NAME" \
+        --attribute-definitions \
+            AttributeName=id,AttributeType=S \
+            AttributeName=email,AttributeType=S \
+        --key-schema \
+            AttributeName=id,KeyType=HASH \
+        --global-secondary-indexes \
+            IndexName=EmailIndex,KeySchema=[{AttributeName=email,KeyType=HASH}],Projection={ProjectionType=ALL},ProvisionedThroughput={ReadCapacityUnits=5,WriteCapacityUnits=5} \
+        --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+    
+    echo "⏳ Waiting for table to be active..."
+    aws dynamodb wait table-exists --table-name "$TABLE_NAME"
+fi
+
+echo "✅ AWS configuration completed successfully!"
+echo ""
+echo "📝 Summary:"
+echo "   - Region: $AWS_REGION"
+echo "   - S3 Bucket (Terraform): $TERRAFORM_BUCKET"
+echo "   - S3 Bucket (App): $APP_BUCKET"
+echo "   - DynamoDB Table: $TABLE_NAME"
+\end{lstlisting}
+
+\section{Configuration GitHub Actions}
+
+\subsection{Workflow de Test Avancé}
+
+\begin{lstlisting}[language=YAML, caption=.github/workflows/test-pipeline.yml]
+name: Test Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # Run daily at 2 AM
+
+env:
+  NODE_VERSION: '18'
+  PNPM_VERSION: '8'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      pnpm-cache: ${{ steps.pnpm-cache.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Lint
+        run: pnpm run lint
+        
+      - name: Type check
+        run: pnpm run type-check
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: setup
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
+        options: >-
+          --health-cmd "curl -f http://localhost:8000"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Run unit tests
+        run: pnpm run test:coverage
+        env:
+          DYNAMODB_ENDPOINT: http://localhost:8000
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy
+          AWS_REGION: us-east-1
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: setup
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+        
+      - name: Build application
+        run: pnpm run build
+        
+      - name: Start application
+        run: pnpm start &
+        env:
+          DYNAMODB_ENDPOINT: http://localhost:8000
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy
+          AWS_REGION: us-east-1
+          
+      - name: Wait for application
+        run: npx wait-on http://localhost:3000
+        
+      - name: Run Playwright tests
+        run: pnpm run test:e2e
+        
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  performance-audit:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build application
+        run: pnpm run build
+        
+      - name: Start application
+        run: pnpm start &
+        
+      - name: Wait for application
+        run: npx wait-on http://localhost:3000
+        
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  docker-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: aws-next-express:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Test Docker image
+        run: |
+          docker run -d --name test-container -p 3000:3000 aws-next-express:test
+          sleep 10
+          curl -f http://localhost:3000/api/health || exit 1
+          docker stop test-container
+\end{lstlisting}
+
+\section{Configuration ESLint et Prettier}
+
+\subsection{Configuration ESLint Avancée}
+
+\begin{lstlisting}[language=JavaScript, caption=eslint.config.js]
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      // TypeScript specific rules
+      "@typescript-eslint/no-unused-vars": ["error", { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_" 
+      }],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/prefer-const": "error",
+      
+      // React specific rules
+      "react/no-unescaped-entities": "off",
+      "react/display-name": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      
+      // General rules
+      "no-console": ["warn", { "allow": ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-duplicate-imports": "error",
+      "no-unused-expressions": "error",
+      "prefer-const": "error",
+      "no-var": "error",
+      
+      // Import rules
+      "import/order": ["error", {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "internal",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"]
+      }]
+    }
+  },
+  {
+    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "off"
+    }
+  }
+];
+
+export default eslintConfig;
+\end{lstlisting}
+
+\subsection{Configuration Prettier}
+
+\begin{lstlisting}[language=JSON, caption=.prettierrc.json]
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "importOrder": [
+    "^(react|next)(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ]
+}
+\end{lstlisting}
+
+\section{Configuration Monitoring}
+
+\subsection{Configuration Grafana}
+
+\begin{lstlisting}[language=YAML, caption=monitoring/grafana-deployment.yaml]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secret
+              key: admin-password
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-kubernetes-app,grafana-clock-panel"
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: grafana-config
+          mountPath: /etc/grafana/grafana.ini
+          subPath: grafana.ini
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+      - name: grafana-config
+        configMap:
+          name: grafana-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: monitoring
+data:
+  grafana.ini: |
+    [analytics]
+    check_for_updates = true
+    
+    [grafana_net]
+    url = https://grafana.net
+    
+    [log]
+    mode = console
+    
+    [paths]
+    data = /var/lib/grafana/
+    logs = /var/log/grafana
+    plugins = /var/lib/grafana/plugins
+    provisioning = /etc/grafana/provisioning
+    
+    [server]
+    protocol = http
+    http_port = 3000
+    domain = localhost
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: monitoring
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana
+\end{lstlisting}
+
+\subsection{Alerting Rules}
+
+\begin{lstlisting}[language=YAML, caption=monitoring/alerting-rules.yaml]
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-alerts
+  namespace: monitoring
+data:
+  alerts.yml: |
+    groups:
+    - name: aws-next-express.rules
+      rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status_code=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors per second"
+          
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s"
+          
+      - alert: LowDiskSpace
+        expr: node_filesystem_avail_bytes / node_filesystem_size_bytes * 100 < 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space"
+          description: "Disk usage is above 90%"
+          
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemFree_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}%"
+          
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pod is crash looping"
+          description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is restarting frequently"
+\end{lstlisting}
+
+Ces configurations avancées complètent l'infrastructure et les outils de développement d'AWS Next Express, offrant une solution robuste et professionnelle pour le déploiement et la maintenance de l'application. 

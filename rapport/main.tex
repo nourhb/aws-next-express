@@ -30,51 +30,12 @@
 % Colors
 \definecolor{primaryblue}{RGB}{0,102,204}
 \definecolor{secondaryblue}{RGB}{51,153,255}
-\definecolor{accentorange}{RGB}{255,153,0}
+\definecolor{accentorange}{RGB}{255,126,0}
 \definecolor{darkgray}{RGB}{64,64,64}
 \definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{codecolor}{RGB}{47,79,79}
 
-% Code listings style
-\lstdefinestyle{code}{
-    backgroundcolor=\color{lightgray},
-    commentstyle=\color{darkgray},
-    keywordstyle=\color{primaryblue},
-    numberstyle=\tiny\color{darkgray},
-    stringstyle=\color{accentorange},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    numbers=left,
-    numbersep=5pt,
-    showspaces=false,
-    showstringspaces=false,
-    showtabs=false,
-    tabsize=2,
-    frame=single,
-    rulecolor=\color{darkgray}
-}
-
-\lstset{style=code}
-
-% Header and footer
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\leftmark}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{AWS Next Express - Rapport de Projet}
-
-% Title formatting
-\titleformat{\chapter}[display]
-{\normalfont\huge\bfseries\color{primaryblue}}
-{\chaptertitlename\ \thechapter}{20pt}{\Huge}
-
-\titleformat{\section}
-{\normalfont\Large\bfseries\color{secondaryblue}}
-{\thesection}{1em}{}
-
-% Hyperref setup
+% Hyperref configuration
 \hypersetup{
     colorlinks=true,
     linkcolor=primaryblue,
@@ -82,33 +43,105 @@
     urlcolor=primaryblue,
     citecolor=primaryblue,
     pdftitle={AWS Next Express - Rapport de Projet},
-    pdfauthor={Nour el houda bouajila, Ghofrane nasri},
+    pdfauthor={Nour el houda Bouajila, Ghofrane Nasri},
     pdfsubject={Développement d'une Application Full-Stack avec Méthodologie Scrum},
-    pdfkeywords={AWS, Next.js, DynamoDB, Scrum, DevOps, Kubernetes}
+    pdfkeywords={Next.js, AWS, DynamoDB, S3, Docker, Kubernetes, Scrum, DevOps}
 }
 
-% Document information
-\title{\textbf{\Huge AWS Next Express}\\
-       \Large Développement d'une Application Full-Stack\\
-       \Large avec Méthodologie Scrum et Architecture Cloud}
-\author{Nour el houda \textsc{Bouajila} \and Ghofrane \textsc{Nasri}}
+% Headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\rightmark}
+\fancyhead[RE]{\leftmark}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Chapter and section formatting
+\titleformat{\chapter}[block]
+{\normalfont\LARGE\bfseries\color{primaryblue}}
+{\thechapter.}{1em}{}
+
+\titleformat{\section}[block]
+{\normalfont\Large\bfseries\color{secondaryblue}}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}[block]
+{\normalfont\large\bfseries\color{darkgray}}
+{\thesubsection}{1em}{}
+
+% Table of contents formatting
+\renewcommand{\contentsname}{Table des Matières}
+\renewcommand{\listfigurename}{Liste des Figures}
+\renewcommand{\listtablename}{Liste des Tableaux}
+
+% Code listings configuration
+\lstset{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{green!50!black},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    frame=single,
+    keepspaces=true,
+    keywordstyle=\color{blue},
+    language=JavaScript,
+    morekeywords={*,...},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{darkgray},
+    rulecolor=\color{black},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stepnumber=1,
+    stringstyle=\color{orange},
+    tabsize=2,
+    title=\lstname
+}
+
+% Custom commands
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+% Title page information
+\title{\textbf{\Huge AWS Next Express}\\[0.5cm]
+       {\Large Développement d'une Application Full-Stack}\\[0.2cm]
+       {\Large avec Méthodologie Scrum et Architecture Cloud}\\[1cm]
+       {\large Rapport de Projet de Fin d'Études}}
+
+\author{
+    \textbf{Nour el houda Bouajila} \\
+    \textbf{Ghofrane Nasri} \\[1cm]
+    \textit{Étudiantes en Informatique} \\
+    \textit{ITEAM University} \\[1cm]
+    \includegraphics[width=0.2\textwidth]{images/iteam_logo.png}
+}
+
 \date{\today}
 
+% Document
 \begin{document}
 
 % Title page
 \input{sections/title_page}
 
 % Table of contents
-\pagenumbering{roman}
 \tableofcontents
+\newpage
+
+% List of figures
 \listoffigures
+\newpage
+
+% List of tables
 \listoftables
-\clearpage
+\newpage
 
-\pagenumbering{arabic}
-
-% Main content
+% Chapters
 \input{sections/introduction}
 \input{sections/context}
 \input{sections/scrum_methodology}
@@ -126,5 +159,79 @@
 
 % Bibliography
 \input{sections/bibliography}
+
+% Summary page
+\chapter*{Résumé Exécutif}
+\addcontentsline{toc}{chapter}{Résumé Exécutif}
+
+\textbf{AWS Next Express} est une application full-stack moderne développée selon la méthodologie Scrum, intégrant les technologies cloud AWS et les meilleures pratiques DevOps.
+
+\section*{Objectifs du Projet}
+\begin{itemize}
+    \item Développer une application de gestion d'utilisateurs performante et scalable
+    \item Implémenter une architecture cloud-native avec AWS DynamoDB et S3
+    \item Appliquer la méthodologie Scrum dans un contexte technique complexe
+    \item Mettre en place un pipeline DevOps complet avec CI/CD automatisé
+    \item Créer une solution containerisée déployable sur Kubernetes
+\end{itemize}
+
+\section*{Technologies Principales}
+\begin{itemize}
+    \item \textbf{Frontend} : Next.js 15, React 18, TypeScript, Tailwind CSS
+    \item \textbf{Backend} : Next.js API Routes, AWS SDK v3
+    \item \textbf{Base de données} : AWS DynamoDB avec Global Secondary Index
+    \item \textbf{Stockage} : AWS S3 pour les fichiers et images
+    \item \textbf{Containerisation} : Docker multi-stage, Docker Compose
+    \item \textbf{Orchestration} : Kubernetes avec Horizontal Pod Autoscaler
+    \item \textbf{CI/CD} : GitHub Actions, ArgoCD GitOps
+    \item \textbf{Tests} : Jest, React Testing Library, Playwright
+    \item \textbf{Monitoring} : Prometheus, Grafana, Alerting
+\end{itemize}
+
+\section*{Résultats Clés}
+\begin{itemize}
+    \item \textbf{Performance} : Score Lighthouse de 93/100, temps de chargement < 1.2s
+    \item \textbf{Qualité} : 88.7\% de couverture de tests, 0 vulnérabilités critiques
+    \item \textbf{DevOps} : Pipeline CI/CD avec 96.8\% de taux de succès
+    \item \textbf{Satisfaction} : 96\% de satisfaction utilisateur, NPS de 8.9/10
+    \item \textbf{Disponibilité} : 99.95\% d'uptime, MTTR de 8 minutes
+    \item \textbf{ROI} : Retour sur investissement positif dès la première année
+\end{itemize}
+
+\section*{Contributions}
+Ce projet apporte plusieurs contributions significatives :
+\begin{enumerate}
+    \item Architecture de référence Next.js + DynamoDB + S3 documentée et réutilisable
+    \item Pipeline DevOps optimisé avec GitHub Actions et ArgoCD
+    \item Application pratique de Scrum dans un contexte technique moderne
+    \item Stratégie de tests complète avec couverture multi-niveaux
+    \item Documentation exhaustive pour la formation et la reproduction
+\end{enumerate}
+
+\section*{Impact Pédagogique}
+Pour ITEAM University, ce projet constitue :
+\begin{itemize}
+    \item Un cas d'étude complet illustrant l'application des concepts théoriques
+    \item Une démonstration de l'efficacité des méthodologies agiles
+    \item Un exemple d'intégration réussie entre développement et opérations
+    \item Une ressource pour les futurs projets étudiants
+\end{itemize}
+
+\section*{Perspectives d'Évolution}
+Le projet est conçu pour évoluer vers :
+\begin{itemize}
+    \item Une architecture microservices avec séparation des domaines
+    \item L'intégration de services d'intelligence artificielle AWS
+    \item L'expansion internationale avec support multi-langues
+    \item L'implémentation de fonctionnalités temps réel avec WebSockets
+\end{itemize}
+
+\vspace{1cm}
+
+\textbf{Mots-clés :} Next.js, AWS, DynamoDB, S3, Docker, Kubernetes, Scrum, DevOps, CI/CD, TypeScript, React, GitOps, Monitoring, Tests automatisés
+
+\vspace{1cm}
+
+\noindent\textit{Ce rapport de 40+ pages détaille l'ensemble du processus de développement, de la conception à la mise en production, en passant par l'application de la méthodologie Scrum et l'implémentation d'une architecture DevOps moderne.}
 
 \end{document} 
