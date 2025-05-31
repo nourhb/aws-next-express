@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run linting
+pnpm lint
+
+# Run type checking
+pnpm tsc --noEmit
+
+# Run tests
+pnpm test 

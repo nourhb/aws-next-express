@@ -1,0 +1,289 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, ArrowLeft, Edit, Trash2 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
+import { UserForm } from "@/components/user-form"
+
+interface User {
+  id: string
+  name: string
+  email: string
+  profilePictureUrl: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface UserDetailPageProps {
+  params: { id: string }
+}
+
+export default function UserDetailPage({ params }: UserDetailPageProps) {
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const { toast } = useToast()
+  const router = useRouter()
+
+  useEffect(() => {
+    fetchUser()
+  }, [params.id])
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`/api/users/${params.id}`)
+      if (!response.ok) {
+        if (response.status === 404) {
+          toast({
+            title: "Erreur",
+            description: "Utilisateur non trouvé",
+            variant: "destructive",
+          })
+          router.push('/users')
+          return
+        }
+        throw new Error("Erreur lors de la récupération de l'utilisateur")
+      }
+      const userData = await response.json()
+      setUser(userData)
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger l'utilisateur",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!user) return
+    
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la suppression de l'utilisateur")
+      }
+
+      toast({
+        title: "Succès",
+        description: "L'utilisateur a été supprimé avec succès",
+      })
+      router.push('/users')
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleUpdateSuccess = () => {
+    setIsEditing(false)
+    fetchUser() // Refresh user data
+    toast({
+      title: "Succès",
+      description: "L'utilisateur a été mis à jour avec succès",
+    })
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-10">
+        <div className="flex justify-center items-center py-20">
+          <div className="text-center">
+            <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
+            <p className="text-muted-foreground">Chargement de l'utilisateur...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="container mx-auto py-10">
+        <Card>
+          <CardContent className="py-20 text-center">
+            <p className="text-muted-foreground">Utilisateur non trouvé</p>
+            <Link href="/users">
+              <Button className="mt-4">Retour à la liste</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (isEditing) {
+    return (
+      <div className="container mx-auto py-10">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center gap-4 mb-6">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsEditing(false)}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-2xl font-bold">Modifier l'utilisateur</h1>
+          </div>
+          
+          <UserForm 
+            user={user} 
+            onSuccess={handleUpdateSuccess}
+            onCancel={() => setIsEditing(false)}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto py-10">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/users">
+              <Button variant="outline" size="icon">
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </Link>
+            <h1 className="text-2xl font-bold">Détails de l'utilisateur</h1>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button onClick={() => setIsEditing(true)} variant="outline">
+              <Edit className="h-4 w-4 mr-2" />
+              Modifier
+            </Button>
+            <Button 
+              onClick={handleDelete} 
+              variant="destructive"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
+              Supprimer
+            </Button>
+          </div>
+        </div>
+
+        {/* User Info Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Informations personnelles</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-start gap-6">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                <AvatarImage src={user.profilePictureUrl || "/placeholder.svg"} alt={user.name} />
+                <AvatarFallback className="text-2xl font-medium">
+                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Nom complet</label>
+                    <p className="text-lg font-medium">{user.name}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Email</label>
+                    <p className="text-lg">{user.email}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">ID</label>
+                    <p className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                      {user.id}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Statut</label>
+                    <div className="mt-1">
+                      <Badge variant="default">Actif</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Metadata Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Métadonnées</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Date de création</label>
+                <p className="text-sm">{formatDate(user.createdAt)}</p>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Dernière modification</label>
+                <p className="text-sm">{formatDate(user.updatedAt)}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Profile Picture Card */}
+        {user.profilePictureUrl && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Photo de profil</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-center">
+                <img 
+                  src={user.profilePictureUrl} 
+                  alt={user.name}
+                  className="max-w-md rounded-lg shadow-lg"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  )
+} 

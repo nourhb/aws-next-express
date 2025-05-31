@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+    depends_on:
+      - dynamodb-local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - app-network
+
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    networks:
+      - app-network
+
+volumes:
+  dynamodb-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge 

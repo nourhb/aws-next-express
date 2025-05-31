@@ -1,0 +1,102 @@
+import { dynamoDB } from '../aws/dynamodb';
+import { v4 as uuidv4 } from 'uuid';
+
+const USERS_TABLE = process.env.DYNAMODB_USERS_TABLE || 'users';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  profilePictureUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateUserData {
+  name: string;
+  email: string;
+  profilePictureUrl: string;
+}
+
+export async function getUsers(): Promise<User[]> {
+  try {
+    const result = await dynamoDB.scanItems(USERS_TABLE);
+    return result.Items as User[] || [];
+  } catch (error) {
+    console.error('Error getting users:', error);
+    throw error;
+  }
+}
+
+export async function getUserById(id: string): Promise<User | null> {
+  try {
+    const result = await dynamoDB.getItem(USERS_TABLE, { id });
+    return result.Item as User || null;
+  } catch (error) {
+    console.error('Error getting user by id:', error);
+    throw error;
+  }
+}
+
+export async function getUserByEmail(email: string): Promise<User | null> {
+  try {
+    const result = await dynamoDB.queryItems(
+      USERS_TABLE,
+      'email = :email',
+      { ':email': email }
+    );
+    return result.Items?.[0] as User || null;
+  } catch (error) {
+    console.error('Error getting user by email:', error);
+    throw error;
+  }
+}
+
+export async function createUser(data: CreateUserData): Promise<User> {
+  const now = new Date().toISOString();
+  const user: User = {
+    id: uuidv4(),
+    ...data,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  try {
+    await dynamoDB.putItem(USERS_TABLE, user);
+    return user;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+}
+
+export async function updateUser(id: string, data: Partial<CreateUserData>): Promise<User | null> {
+  try {
+    const existingUser = await getUserById(id);
+    if (!existingUser) {
+      return null;
+    }
+
+    const updatedUser: User = {
+      ...existingUser,
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await dynamoDB.putItem(USERS_TABLE, updatedUser);
+    return updatedUser;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+}
+
+export async function deleteUser(id: string): Promise<boolean> {
+  try {
+    await dynamoDB.deleteItem(USERS_TABLE, { id });
+    return true;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+} 

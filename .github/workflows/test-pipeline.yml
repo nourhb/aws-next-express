@@ -1,0 +1,36 @@
+name: Test Pipeline
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  test-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Test Docker Build
+        run: |
+          docker build -t test-frontend .
+          docker run -d -p 3000:3000 test-frontend
+          sleep 10
+          curl -f http://localhost:3000 || exit 1
+          docker stop $(docker ps -q)
+      
+      - name: Test Docker Compose
+        run: |
+          docker-compose up -d
+          sleep 10
+          curl -f http://localhost:3000 || exit 1
+          docker-compose down
+      
+      - name: Test Kubernetes Config
+        run: |
+          kubectl apply -f k8s/frontend-deployment.yaml --dry-run=client
+      
+      - name: Test ArgoCD Config
+        run: |
+          # Verify ArgoCD application manifest
+          if [ -f "argocd/application.yaml" ]; then
+            argocd app validate frontend --server ${{ secrets.ARGOCD_SERVER }} --auth-token ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          fi 

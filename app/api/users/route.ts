@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import { v4 as uuidv4 } from "uuid"
-import { createUser, getUsers } from "@/lib/db/users"
+import { createUser, getUsers } from "@/lib/db/users-dynamodb"
 
 // Initialize S3 client
 const s3Client = new S3Client({
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Generate S3 URL
     const profilePictureUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`
 
-    // Save user to database
+    // Save user to DynamoDB
     const user = await createUser({
       name,
       email,

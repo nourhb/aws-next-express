@@ -1,45 +1,55 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3"
-import { deleteUser, getUserById } from "@/lib/db/users"
+import { getUserById, updateUser, deleteUser } from "@/lib/db/users-dynamodb"
 
-// Initialize S3 client
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || "us-east-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
-  },
-})
-
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const id = Number.parseInt(params.id)
-
-    // Get user to find profile picture URL
-    const user = await getUserById(id)
-
+    const user = await getUserById(params.id)
+    
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
+    
+    return NextResponse.json(user)
+  } catch (error) {
+    console.error("Error fetching user:", error)
+    return NextResponse.json({ error: "Failed to fetch user" }, { status: 500 })
+  }
+}
 
-    // Delete profile picture from S3 if it exists
-    if (user.profilePictureUrl) {
-      // Extract key from URL
-      const url = new URL(user.profilePictureUrl)
-      const key = url.pathname.substring(1) // Remove leading slash
-
-      const deleteParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME || "",
-        Key: key,
-      }
-
-      await s3Client.send(new DeleteObjectCommand(deleteParams))
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const data = await request.json()
+    const user = await updateUser(params.id, data)
+    
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
+    
+    return NextResponse.json(user)
+  } catch (error) {
+    console.error("Error updating user:", error)
+    return NextResponse.json({ error: "Failed to update user" }, { status: 500 })
+  }
+}
 
-    // Delete user from database
-    await deleteUser(id)
-
-    return NextResponse.json({ success: true })
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const success = await deleteUser(params.id)
+    
+    if (!success) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
+    
+    return NextResponse.json({ message: "User deleted successfully" })
   } catch (error) {
     console.error("Error deleting user:", error)
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 })
