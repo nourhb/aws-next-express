@@ -1,0 +1,234 @@
+\chapter{Contexte et État de l'Art}
+
+\section{Évolution du Développement Web}
+
+\subsection{Du Web Statique au Web Dynamique}
+
+L'évolution du développement web a connu plusieurs phases majeures depuis les années 1990. Initialement, les sites web étaient statiques, composés de fichiers HTML simples. L'introduction de JavaScript côté client et des technologies serveur (PHP, ASP, JSP) a permis le développement d'applications web dynamiques.
+
+Aujourd'hui, nous assistons à l'émergence d'architectures plus sophistiquées :
+\begin{itemize}
+    \item \textbf{Single Page Applications (SPA)} : Applications qui chargent une seule page HTML et mettent à jour dynamiquement le contenu
+    \item \textbf{Progressive Web Apps (PWA)} : Applications web qui offrent une expérience similaire aux applications natives
+    \item \textbf{Jamstack} : Architecture basée sur JavaScript, APIs et Markup pré-compilé
+    \item \textbf{Server-Side Rendering (SSR)} : Rendu côté serveur pour améliorer les performances et le SEO
+\end{itemize}
+
+\subsection{Tendances Actuelles}
+
+Les tendances actuelles du développement web incluent :
+\begin{enumerate}
+    \item \textbf{Full-Stack Frameworks} : React, Vue.js, Angular avec leurs écosystèmes
+    \item \textbf{Edge Computing} : Déploiement proche des utilisateurs pour réduire la latence
+    \item \textbf{Serverless} : Architecture sans serveur pour une scalabilité automatique
+    \item \textbf{Micro-frontends} : Décomposition des interfaces utilisateur en composants indépendants
+\end{enumerate}
+
+\section{Technologies Frontend Modernes}
+
+\subsection{React et l'Écosystème}
+
+React, développé par Facebook, a révolutionné le développement frontend avec :
+\begin{itemize}
+    \item Le concept de composants réutilisables
+    \item Le Virtual DOM pour optimiser les performances
+    \item Un écosystème riche d'outils et de bibliothèques
+    \item Une large communauté de développeurs
+\end{itemize}
+
+\subsection{Next.js : Le Framework React de Référence}
+
+Next.js s'impose comme le framework React de référence grâce à :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \textbf{Fonctionnalité} & \textbf{Avantage} \\
+        \hline
+        Server-Side Rendering & Amélioration du SEO et des performances \\
+        \hline
+        Static Site Generation & Génération de sites statiques optimisés \\
+        \hline
+        API Routes & Backend intégré dans le même projet \\
+        \hline
+        Optimisation automatique & Bundle splitting, lazy loading automatique \\
+        \hline
+        TypeScript support & Support natif de TypeScript \\
+        \hline
+        File-based routing & Routing basé sur la structure des fichiers \\
+        \hline
+    \end{tabularx}
+    \caption{Fonctionnalités clés de Next.js}
+    \label{tab:nextjs_features}
+\end{table}
+
+\subsection{TypeScript : Typage Statique pour JavaScript}
+
+TypeScript apporte plusieurs avantages au développement JavaScript :
+\begin{itemize}
+    \item \textbf{Typage statique} : Détection d'erreurs à la compilation
+    \item \textbf{IntelliSense amélioré} : Autocomplétion et documentation en ligne
+    \item \textbf{Refactoring sûr} : Renommage et restructuration avec confiance
+    \item \textbf{Interopérabilité} : Compatible avec le JavaScript existant
+\end{itemize}
+
+\section{Technologies Backend et Bases de Données}
+
+\subsection{Bases de Données NoSQL}
+
+Les bases de données NoSQL répondent aux besoins de scalabilité moderne :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/nosql_comparison.png}
+    \caption{Comparaison des types de bases de données NoSQL}
+    \label{fig:nosql_comparison}
+\end{figure}
+
+\subsection{Amazon DynamoDB}
+
+DynamoDB se distingue par :
+\begin{itemize}
+    \item \textbf{Performance} : Latence en millisecondes à n'importe quelle échelle
+    \item \textbf{Scalabilité} : Adaptation automatique à la charge
+    \item \textbf{Sécurité} : Chiffrement au repos et en transit
+    \item \textbf{Intégration AWS} : Parfaite intégration avec l'écosystème AWS
+\end{itemize}
+
+\begin{lstlisting}[language=JavaScript, caption=Exemple d'opération DynamoDB]
+const dynamoDB = {
+  async putItem(tableName, item) {
+    const command = new PutCommand({
+      TableName: tableName,
+      Item: item,
+    });
+    return await docClient.send(command);
+  }
+};
+\end{lstlisting}
+
+\subsection{AWS S3 pour le Stockage}
+
+Amazon S3 offre :
+\begin{itemize}
+    \item Stockage pratiquement illimité
+    \item Durabilité de 99.999999999\% (11 9)
+    \item Classes de stockage pour optimiser les coûts
+    \item Intégration avec CloudFront pour la distribution globale
+\end{itemize}
+
+\section{Containerisation et Orchestration}
+
+\subsection{Docker : La Révolution de la Containerisation}
+
+Docker a transformé le déploiement d'applications avec :
+\begin{itemize}
+    \item \textbf{Portabilité} : "Write once, run anywhere"
+    \item \textbf{Isolation} : Séparation des environnements
+    \item \textbf{Légèreté} : Moins de ressources que la virtualisation traditionnelle
+    \item \textbf{Reproductibilité} : Environnements identiques partout
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/docker_architecture.png}
+    \caption{Architecture Docker}
+    \label{fig:docker_architecture}
+\end{figure}
+
+\subsection{Kubernetes : L'Orchestrateur de Référence}
+
+Kubernetes automatise :
+\begin{itemize}
+    \item Le déploiement et la mise à l'échelle
+    \item La gestion des ressources
+    \item La découverte de services
+    \item La récupération automatique en cas de panne
+\end{itemize}
+
+\section{DevOps et CI/CD}
+
+\subsection{Culture DevOps}
+
+DevOps combine :
+\begin{itemize}
+    \item \textbf{Collaboration} : Rapprochement Dev et Ops
+    \item \textbf{Automatisation} : Réduction des tâches manuelles
+    \item \textbf{Monitoring} : Surveillance continue des applications
+    \item \textbf{Amélioration continue} : Cycles de feedback rapides
+\end{itemize}
+
+\subsection{GitHub Actions}
+
+GitHub Actions offre :
+\begin{itemize}
+    \item Intégration native avec les dépôts GitHub
+    \item Workflows configurables avec YAML
+    \item Large écosystème d'actions pré-construites
+    \item Exécution sur runners cloud ou auto-hébergés
+\end{itemize}
+
+\subsection{ArgoCD : GitOps pour Kubernetes}
+
+ArgoCD implémente le pattern GitOps :
+\begin{itemize}
+    \item Git comme source de vérité
+    \item Déploiements déclaratifs
+    \item Synchronisation automatique
+    \item Interface web pour la supervision
+\end{itemize}
+
+\section{Méthodologies Agiles}
+
+\subsection{Évolution des Méthodologies de Développement}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|}
+        \hline
+        \textbf{Méthodologie} & \textbf{Avantages} & \textbf{Inconvénients} \\
+        \hline
+        Cascade & Structure claire, documentation complète & Peu flexible, livraisons tardives \\
+        \hline
+        Agile & Flexibilité, livraisons fréquentes & Moins de documentation, coordination complexe \\
+        \hline
+        Scrum & Cadre structuré, amélioration continue & Nécessite engagement d'équipe \\
+        \hline
+        DevOps & Automatisation, feedback rapide & Complexité technologique \\
+        \hline
+    \end{tabularx}
+    \caption{Comparaison des méthodologies de développement}
+    \label{tab:methodologies_comparison}
+\end{table}
+
+\subsection{Scrum en Détail}
+
+Scrum se base sur :
+\begin{itemize}
+    \item \textbf{Sprints} : Itérations de durée fixe (1-4 semaines)
+    \item \textbf{Rôles définis} : Product Owner, Scrum Master, Équipe de développement
+    \item \textbf{Cérémonies} : Sprint Planning, Daily Standup, Sprint Review, Retrospective
+    \item \textbf{Artefacts} : Product Backlog, Sprint Backlog, Increment
+\end{itemize}
+
+\section{Positionnement de Notre Projet}
+
+Notre projet AWS Next Express s'inscrit dans cette évolution technologique en combinant :
+
+\begin{enumerate}
+    \item \textbf{Frontend moderne} : Next.js 15 avec TypeScript et Tailwind CSS
+    \item \textbf{Backend cloud-native} : API Routes avec DynamoDB et S3
+    \item \textbf{Infrastructure conteneurisée} : Docker et Kubernetes
+    \item \textbf{DevOps automatisé} : CI/CD avec GitHub Actions et ArgoCD
+    \item \textbf{Méthodologie agile} : Scrum avec sprints de 2 semaines
+\end{enumerate}
+
+Cette approche nous permet de démontrer l'application pratique des meilleures pratiques actuelles du développement logiciel dans un projet concret et fonctionnel.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/technology_stack.png}
+    \caption{Stack technologique du projet AWS Next Express}
+    \label{fig:technology_stack}
+\end{figure} 
