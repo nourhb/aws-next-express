@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aws-next-express
+  labels:
+    name: aws-next-express
+    environment: production
+    managed-by: kubernetes
+  annotations:
+    description: "Production environment for AWS Next.js Express application" 

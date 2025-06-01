@@ -11,11 +11,38 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "prepare": "husky install",
+    
     "docker:build": "docker build -t aws-next-express .",
+    "docker:build:prod": "docker build -f Dockerfile.production -t aws-next-express:prod .",
     "docker:run": "docker run -p 3000:3000 aws-next-express",
+    "docker:run:prod": "docker run -p 3000:3000 aws-next-express:prod",
     "docker:compose": "docker-compose up",
+    "docker:compose:prod": "docker-compose -f docker-compose.production.yml up",
+    "docker:compose:down": "docker-compose down",
+    "docker:compose:build": "docker-compose build",
+    "docker:push": "docker push aws-next-express",
+    
     "k8s:deploy": "kubectl apply -f k8s/",
-    "k8s:delete": "kubectl delete -f k8s/"
+    "k8s:deploy:full": "bash scripts/deploy-k8s.sh",
+    "k8s:delete": "kubectl delete -f k8s/",
+    "k8s:cleanup": "bash scripts/deploy-k8s.sh --cleanup",
+    "k8s:status": "kubectl get all -n aws-next-express",
+    "k8s:logs": "kubectl logs -f deployment/app-deployment -n aws-next-express",
+    "k8s:describe": "kubectl describe deployment app-deployment -n aws-next-express",
+    "k8s:port-forward": "kubectl port-forward svc/app-service 3000:3000 -n aws-next-express",
+    
+    "argocd:apply": "kubectl apply -f argocd/application.yaml",
+    "argocd:delete": "kubectl delete -f argocd/application.yaml",
+    "argocd:sync": "argocd app sync aws-next-express",
+    
+    "terraform:init": "cd terraform && terraform init",
+    "terraform:plan": "cd terraform && terraform plan",
+    "terraform:apply": "cd terraform && terraform apply",
+    "terraform:destroy": "cd terraform && terraform destroy",
+    
+    "infra:docker": "npm run docker:compose:prod",
+    "infra:k8s": "npm run k8s:deploy:full",
+    "infra:terraform": "npm run terraform:apply"
   },
   "jest": {
     "preset": "ts-jest",
