@@ -1,295 +1,296 @@
 "use client"
 
-import Link from "next/link"
-import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { HeroHeader } from "@/components/hero-header"
+import { DatabaseSelector } from "@/components/database-selector"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowDown, Github, ExternalLink } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  Users, 
-  FileText, 
-  Plus, 
-  TrendingUp, 
-  Activity,
-  Database,
-  Cloud,
-  BarChart3,
-  ArrowRight
-} from "lucide-react"
 
-interface User {
-  id: string
-  name: string
-  email: string
-  profilePictureUrl: string
-  createdAt: string
-}
-
-interface DashboardStats {
-  totalUsers: number
-  recentUsers: User[]
-  systemStatus: {
-    database: boolean
-    storage: boolean
-    api: boolean
-  }
-}
-
-export default function Home() {
-  const [stats, setStats] = useState<DashboardStats>({
-    totalUsers: 0,
-    recentUsers: [],
-    systemStatus: { database: true, storage: true, api: true }
-  })
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    fetchDashboardData()
-  }, [])
-
-  const fetchDashboardData = async () => {
-    try {
-      const response = await fetch('/api/users')
-      if (response.ok) {
-        const users = await response.json()
-        setStats({
-          totalUsers: users.length,
-          recentUsers: users.slice(0, 3),
-          systemStatus: { database: true, storage: true, api: true }
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error)
-      setStats(prev => ({
-        ...prev,
-        systemStatus: { database: false, storage: true, api: false }
-      }))
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+export default function HomePage() {
+  const scrollToDatabase = () => {
+    document.getElementById('database-section')?.scrollIntoView({ 
+      behavior: 'smooth' 
     })
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          AWS Next Express
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Gestionnaire de fichiers et utilisateurs avec DynamoDB, S3 et orchestration Kubernetes
-        </p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border-l-4 border-l-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Utilisateurs</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              +{stats.recentUsers.length} récemment ajoutés
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-green-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Statut Base de Données</CardTitle>
-            <Database className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <Badge variant={stats.systemStatus.database ? "default" : "destructive"}>
-                {stats.systemStatus.database ? "Connecté" : "Déconnecté"}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">DynamoDB Local</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-orange-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stockage</CardTitle>
-            <Cloud className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <Badge variant={stats.systemStatus.storage ? "default" : "destructive"}>
-                {stats.systemStatus.storage ? "Opérationnel" : "Indisponible"}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">AWS S3</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-purple-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">API Status</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <Badge variant={stats.systemStatus.api ? "default" : "destructive"}>
-                {stats.systemStatus.api ? "Actif" : "Erreur"}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">REST API</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <Users className="h-6 w-6 text-blue-500" />
-              <CardTitle>Gestion des Utilisateurs</CardTitle>
-            </div>
-            <CardDescription>
-              Gérez les utilisateurs avec DynamoDB - CRUD complet avec upload de photos
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Utilisateurs totaux</span>
-              <Badge variant="secondary">{stats.totalUsers}</Badge>
-            </div>
-            <div className="flex gap-2">
-              <Link href="/users" className="flex-1">
-                <Button className="w-full">
-                  <Users className="h-4 w-4 mr-2" />
-                  Voir les utilisateurs
-                </Button>
-              </Link>
-              <Link href="/users/new">
-                <Button variant="outline">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <FileText className="h-6 w-6 text-green-500" />
-              <CardTitle>Gestion des Fichiers</CardTitle>
-            </div>
-            <CardDescription>
-              Upload et gestion de fichiers avec AWS S3 - Stockage sécurisé dans le cloud
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Stockage</span>
-              <Badge variant="secondary">AWS S3</Badge>
-            </div>
-            <Link href="/files">
-              <Button className="w-full">
-                <FileText className="h-4 w-4 mr-2" />
-                Gérer les fichiers
-                <ArrowRight className="h-4 w-4 ml-auto" />
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section id="hero">
+        <div className="relative">
+          <HeroHeader />
+          
+          {/* Call to action overlay */}
+          <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-20">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2, duration: 0.8 }}
+            >
+              <Button
+                onClick={scrollToDatabase}
+                size="lg"
+                variant="outline"
+                className="bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 transition-all duration-300 shadow-2xl"
+              >
+                <ArrowDown className="h-5 w-5 mr-2" />
+                Découvrir l'Architecture
               </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-      {/* Recent Users */}
-      {stats.recentUsers.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-blue-500" />
-                  Utilisateurs Récents
-                </CardTitle>
-                <CardDescription>
-                  Les derniers utilisateurs ajoutés au système
-                </CardDescription>
-              </div>
-              <Link href="/users">
-                <Button variant="outline" size="sm">
-                  Voir tous
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {stats.recentUsers.map((user) => (
-                <div key={user.id} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={user.profilePictureUrl} alt={user.name} />
-                    <AvatarFallback>
-                      {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{user.name}</p>
-                    <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+      {/* Database Section */}
+      <section id="database-section" className="relative min-h-screen py-20">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-background to-background" />
+        
+        <div className="relative z-10 container mx-auto px-6">
+          <DatabaseSelector />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold mb-4 text-gradient">
+              🚀 Fonctionnalités Exceptionnelles
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Une architecture moderne qui repousse les limites du développement full-stack
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: "🗄️",
+                title: "Dual Database",
+                description: "Support complet RDS MySQL et DynamoDB avec interface de sélection",
+                color: "from-blue-500 to-purple-500"
+              },
+              {
+                icon: "⚡",
+                title: "Performance Ultra",
+                description: "Optimisations avancées, animations fluides et loading states intelligents",
+                color: "from-yellow-500 to-orange-500"
+              },
+              {
+                icon: "🐳",
+                title: "Containerisation",
+                description: "Docker Compose complet avec 7 services et orchestration Kubernetes",
+                color: "from-blue-500 to-cyan-500"
+              },
+              {
+                icon: "🔄",
+                title: "CI/CD Pipeline",
+                description: "GitHub Actions, ArgoCD et déploiement GitOps automatisé",
+                color: "from-green-500 to-emerald-500"
+              },
+              {
+                icon: "🛡️",
+                title: "Sécurité Avancée",
+                description: "Authentication, autorisations IAM et chiffrement des données",
+                color: "from-red-500 to-pink-500"
+              },
+              {
+                icon: "📊",
+                title: "Monitoring",
+                description: "Métriques en temps réel, dashboards et alertes intelligentes",
+                color: "from-purple-500 to-indigo-500"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -10 }}
+                className="group"
+              >
+                <div className="bg-card border border-border rounded-xl p-6 h-full card-hover group-hover:border-primary/50 transition-all duration-300">
+                  <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    {feature.icon}
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(user.createdAt)}
-                    </p>
-                  </div>
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold mb-4 text-gradient">
+              📊 Métriques Impressionnantes
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { number: "15K+", label: "Lignes de Code", icon: "💻" },
+              { number: "80+", label: "Fichiers", icon: "📁" },
+              { number: "25+", label: "Composants", icon: "🧩" },
+              { number: "12", label: "APIs", icon: "🔌" },
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.5 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <div className="text-4xl mb-2">{stat.icon}</div>
+                <motion.div
+                  className="text-4xl font-bold text-primary mb-2"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  {stat.number}
+                </motion.div>
+                <div className="text-muted-foreground font-medium">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10">
+        <div className="container mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl font-bold mb-6 text-gradient">
+              🎓 Projet ITEAM University
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Découvrez une application complète développée par nos étudiants, 
+              démontrant l'excellence technique et l'innovation dans le développement moderne.
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              {[
+                "✅ Toutes les exigences satisfaites",
+                "🚀 Fonctionnalités bonus avancées", 
+                "📱 Interface moderne et responsive",
+                "🛡️ Prêt pour la production"
+              ].map((point, index) => (
+                <motion.div
+                  key={point}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Badge variant="secondary" className="text-sm px-4 py-2">
+                    {point}
+                  </Badge>
+                </motion.div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
 
-      {/* Technology Stack */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            Stack Technologique
-          </CardTitle>
-          <CardDescription>
-            Architecture moderne avec containerisation et orchestration
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 rounded-lg bg-background/50">
-              <div className="font-medium">Frontend</div>
-              <div className="text-sm text-muted-foreground">Next.js 15</div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  size="lg" 
+                  onClick={scrollToDatabase}
+                  className="btn-gradient"
+                >
+                  🚀 Explorer l'Application
+                </Button>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => window.open('https://github.com/nourhb/aws-next-express', '_blank')}
+                >
+                  <Github className="h-5 w-5 mr-2" />
+                  Code Source
+                  <ExternalLink className="h-4 w-4 ml-2" />
+                </Button>
+              </motion.div>
             </div>
-            <div className="text-center p-3 rounded-lg bg-background/50">
-              <div className="font-medium">Base de Données</div>
-              <div className="text-sm text-muted-foreground">DynamoDB</div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 bg-muted/50 border-t">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center">
+                <span className="text-white font-bold">A</span>
+              </div>
+              <span className="text-xl font-bold">AWS Next Express</span>
             </div>
-            <div className="text-center p-3 rounded-lg bg-background/50">
-              <div className="font-medium">Stockage</div>
-              <div className="text-sm text-muted-foreground">AWS S3</div>
+            
+            <p className="text-muted-foreground mb-4">
+              Développé avec ❤️ par{" "}
+              <span className="text-primary font-semibold">Nour el houda Bouajila</span> et{" "}
+              <span className="text-primary font-semibold">Ghofrane Nasri</span>
+            </p>
+            
+            <div className="flex justify-center items-center gap-4 text-sm text-muted-foreground">
+              <span>🎓 ITEAM University</span>
+              <span>•</span>
+              <span>🚀 Next.js 15</span>
+              <span>•</span>
+              <span>☁️ AWS Architecture</span>
+              <span>•</span>
+              <span>🐳 Docker & Kubernetes</span>
             </div>
-            <div className="text-center p-3 rounded-lg bg-background/50">
-              <div className="font-medium">Orchestration</div>
-              <div className="text-sm text-muted-foreground">Kubernetes</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </motion.div>
+        </div>
+      </footer>
     </div>
   )
 }
