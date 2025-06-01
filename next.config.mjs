@@ -8,12 +8,16 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ['localhost'],
   },
   // Enable standalone mode for Docker production builds
   output: 'standalone',
   // Optimize for containerized environments
   experimental: {
-    outputFileTracingRoot: process.cwd(),
+    outputFileTracingRoot: '.',
+  },
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 }
 

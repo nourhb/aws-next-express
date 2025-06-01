@@ -5,85 +5,31 @@ metadata:
   namespace: aws-next-express
   labels:
     app: aws-next-express
-    component: frontend
-    version: v1
 spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
+  replicas: 2
   selector:
     matchLabels:
       app: aws-next-express
-      component: frontend
   template:
     metadata:
       labels:
         app: aws-next-express
-        component: frontend
-        version: v1
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "3000"
-        prometheus.io/path: "/api/metrics"
     spec:
       serviceAccountName: aws-next-express-sa
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
-        runAsGroup: 1001
         fsGroup: 1001
       containers:
       - name: app
-        image: ${DOCKER_REGISTRY}/aws-next-express:${IMAGE_TAG:-latest}
-        imagePullPolicy: Always
+        image: ghcr.io/nourhb/aws-next-express:latest
         ports:
-        - name: http
-          containerPort: 3000
-          protocol: TCP
-        env:
-        - name: NODE_ENV
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: NODE_ENV
-        - name: PORT
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: PORT
-        - name: AWS_REGION
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: AWS_REGION
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: database-url
-        - name: NEXTAUTH_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: nextauth-secret
-        - name: AWS_S3_BUCKET_NAME
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: s3-bucket-name
-        - name: REDIS_URL
-          value: "redis://redis-service:6379"
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 1001
-          capabilities:
-            drop:
-              - ALL
-          readOnlyRootFilesystem: false
+        - containerPort: 3000
+        envFrom:
+        - secretRef:
+            name: app-secrets
+        - configMapRef:
+            name: app-config
         resources:
           requests:
             memory: "256Mi"
@@ -91,6 +37,12 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
         livenessProbe:
           httpGet:
             path: /api/health
@@ -117,17 +69,6 @@ spec:
         emptyDir: {}
       - name: var-cache
         emptyDir: {}
-      nodeSelector:
-        kubernetes.io/os: linux
-      tolerations:
-      - key: "node.kubernetes.io/not-ready"
-        operator: "Exists"
-        effect: "NoExecute"
-        tolerationSeconds: 300
-      - key: "node.kubernetes.io/unreachable"
-        operator: "Exists"
-        effect: "NoExecute"
-        tolerationSeconds: 300
 ---
 apiVersion: v1
 kind: Service
@@ -136,17 +77,14 @@ metadata:
   namespace: aws-next-express
   labels:
     app: aws-next-express
-    component: frontend
 spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: 3000
-    targetPort: 3000
-    protocol: TCP
   selector:
     app: aws-next-express
-    component: frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -172,21 +110,4 @@ spec:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 80
-  behavior:
-    scaleDown:
-      stabilizationWindowSeconds: 300
-      policies:
-      - type: Percent
-        value: 10
-        periodSeconds: 60
-    scaleUp:
-      stabilizationWindowSeconds: 0
-      policies:
-      - type: Percent
-        value: 100
-        periodSeconds: 15
-      - type: Pods
-        value: 4
-        periodSeconds: 15
-      selectPolicy: Max 
+        averageUtilization: 80 
