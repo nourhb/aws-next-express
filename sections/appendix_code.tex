@@ -1,0 +1,179 @@
+\chapter{Annexe A - Configurations Essentielles}
+
+\section{Introduction}
+
+Cette annexe présente les configurations essentielles qui ont guidé le développement d'AWS Next Express. Nous nous concentrons sur les éléments structurants et les décisions architecturales clés plutôt que sur le code détaillé.
+
+\section{Configuration Projet Next.js}
+
+\subsection{Structure Projet}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/nextjs_project_structure.png}
+    \caption{Structure du projet Next.js}
+    \label{fig:nextjs_structure}
+\end{figure}
+
+\subsection{Configuration TypeScript Essentielle}
+
+Configuration de base pour TypeScript :
+
+\begin{lstlisting}[language=json,caption=Configuration TypeScript de base]
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+\end{lstlisting}
+
+\section{Architecture AWS}
+
+\subsection{Services AWS Utilisés}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/aws_services_simple.png}
+    \caption{Services AWS intégrés}
+    \label{fig:aws_services}
+\end{figure}
+
+\subsection{Configuration DynamoDB}
+
+Structure de base pour la table utilisateurs :
+
+\begin{lstlisting}[language=javascript,caption=Table DynamoDB - Structure de base]
+const userTable = {
+  TableName: 'aws-next-express-users',
+  KeySchema: [
+    { AttributeName: 'id', KeyType: 'HASH' }
+  ],
+  AttributeDefinitions: [
+    { AttributeName: 'id', AttributeType: 'S' }
+  ]
+};
+\end{lstlisting}
+
+\subsection{Configuration S3}
+
+Configuration CORS simplifiée pour S3 :
+
+\begin{lstlisting}[language=json,caption=Configuration CORS S3]
+{
+  "CORSRules": [
+    {
+      "AllowedMethods": ["GET", "POST"],
+      "AllowedOrigins": ["https://your-domain.com"],
+      "AllowedHeaders": ["*"]
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{Validation des Données}
+
+\subsection{Schémas de Validation}
+
+Structure simple avec Zod :
+
+\begin{lstlisting}[language=typescript,caption=Validation utilisateur]
+import { z } from 'zod';
+
+export const UserSchema = z.object({
+  name: z.string().min(2).max(50),
+  email: z.string().email()
+});
+
+export type User = z.infer<typeof UserSchema>;
+\end{lstlisting}
+
+\section{Configuration Performance}
+
+\subsection{Next.js Optimisé}
+
+\begin{lstlisting}[language=javascript,caption=Configuration Next.js de base]
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: ['your-s3-bucket.s3.amazonaws.com']
+  },
+  compress: true
+};
+
+module.exports = nextConfig;
+\end{lstlisting}
+
+\section{Tests}
+
+\subsection{Configuration Jest}
+
+\begin{lstlisting}[language=javascript,caption=Configuration Jest simplifiée]
+const config = {
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  moduleNameMapping: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  }
+};
+
+module.exports = config;
+\end{lstlisting}
+
+\section{Déploiement}
+
+\subsection{Docker Configuration}
+
+\begin{lstlisting}[language=dockerfile,caption=Dockerfile de base]
+FROM node:18-alpine
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+CMD ["npm", "start"]
+\end{lstlisting}
+
+\section{Variables d'Environnement}
+
+\subsection{Configuration Environnement}
+
+Structure des variables essentielles :
+
+\begin{lstlisting}[language=bash,caption=Variables d'environnement]
+# AWS Configuration
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+
+# DynamoDB
+DYNAMODB_TABLE_NAME=aws-next-express-users
+
+# S3
+S3_BUCKET_NAME=your-s3-bucket
+
+# Application
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+\end{lstlisting}
+
+\section{Conclusion}
+
+Cette annexe présente les configurations essentielles qui constituent la base d'AWS Next Express. Ces éléments garantissent :
+
+\begin{itemize}
+    \item \textbf{Simplicité} : Configurations claires et maintenables
+    \item \textbf{Performance} : Optimisations de base efficaces
+    \item \textbf{Sécurité} : Validation et protection des données
+    \item \textbf{Déployabilité} : Infrastructure simple et fonctionnelle
+\end{itemize}
+
+Ces configurations servent de base pour des projets similaires et démontrent une approche pragmatique du développement web moderne. 

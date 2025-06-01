@@ -7,8 +7,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Trash2, Edit, Plus, Users, Loader2 } from "lucide-react"
-import { UserForm } from "./user-form"
+import { Trash2, Edit, Plus, Users, Loader2, Database } from "lucide-react"
+import { DynamoUserForm } from "./dynamo-user-form"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,8 +28,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-interface User {
-  id: number  // Changed from string to number for RDS
+interface DynamoUser {
+  id: string  // UUID for DynamoDB
   name: string
   email: string
   profilePictureUrl: string
@@ -37,13 +37,13 @@ interface User {
   updatedAt: string
 }
 
-export function UserList() {
-  const [users, setUsers] = useState<User[]>([])
+export function DynamoUserList() {
+  const [users, setUsers] = useState<DynamoUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [editingUser, setEditingUser] = useState<DynamoUser | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [deletingUserId, setDeletingUserId] = useState<number | null>(null)
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -53,9 +53,9 @@ export function UserList() {
   const fetchUsers = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch("/api/users")
+      const response = await fetch("/api/dynamo-users")
       if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des utilisateurs")
+        throw new Error("Erreur lors de la récupération des utilisateurs DynamoDB")
       }
       const data = await response.json()
       setUsers(data)
@@ -63,7 +63,7 @@ export function UserList() {
       console.error(error)
       toast({
         title: "Erreur",
-        description: "Impossible de charger les utilisateurs",
+        description: "Impossible de charger les utilisateurs depuis DynamoDB",
         variant: "destructive",
       })
     } finally {
@@ -71,15 +71,15 @@ export function UserList() {
     }
   }
 
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: DynamoUser) => {
     setEditingUser(user)
     setIsEditDialogOpen(true)
   }
 
-  const handleDelete = async (userId: number) => {
+  const handleDelete = async (userId: string) => {
     setDeletingUserId(userId)
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      const response = await fetch(`/api/dynamo-users/${userId}`, {
         method: "DELETE",
       })
 
@@ -89,7 +89,7 @@ export function UserList() {
 
       toast({
         title: "Succès",
-        description: "L'utilisateur a été supprimé avec succès",
+        description: "L'utilisateur a été supprimé avec succès de DynamoDB",
       })
 
       // Refresh the list
@@ -98,7 +98,7 @@ export function UserList() {
       console.error(error)
       toast({
         title: "Erreur",
-        description: "Erreur lors de la suppression de l'utilisateur",
+        description: "Erreur lors de la suppression de l'utilisateur de DynamoDB",
         variant: "destructive",
       })
     } finally {
@@ -127,7 +127,7 @@ export function UserList() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Chargement des utilisateurs...</span>
+        <span className="ml-2">Chargement des utilisateurs DynamoDB...</span>
       </div>
     )
   }
@@ -136,8 +136,8 @@ export function UserList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Users className="h-6 w-6" />
-          <h1 className="text-2xl font-bold">Gestion des Utilisateurs</h1>
+          <Database className="h-5 w-5 text-orange-600" />
+          <h1 className="text-xl font-bold">Utilisateurs DynamoDB</h1>
           <Badge variant="secondary">{users.length}</Badge>
         </div>
 
@@ -150,14 +150,21 @@ export function UserList() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl">
             <DialogHeader>
-              <DialogTitle>Ajouter un nouveau utilisateur</DialogTitle>
+              <DialogTitle>Ajouter un nouveau utilisateur (DynamoDB)</DialogTitle>
             </DialogHeader>
-            <UserForm 
+            <DynamoUserForm 
               onSuccess={handleSuccess} 
               onCancel={() => setIsAddDialogOpen(false)}
             />
           </DialogContent>
         </Dialog>
+      </div>
+
+      <div className="flex items-center gap-2 p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+        <Database className="h-4 w-4 text-orange-600" />
+        <p className="text-sm text-orange-800 dark:text-orange-200">
+          <strong>Source:</strong> Amazon DynamoDB - Base NoSQL avec performance élevée et scalabilité automatique
+        </p>
       </div>
 
       {users.length === 0 ? (
@@ -166,7 +173,7 @@ export function UserList() {
             <Users className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Aucun utilisateur trouvé</h3>
             <p className="text-muted-foreground mb-4">
-              Commencez par ajouter votre premier utilisateur
+              Commencez par ajouter votre premier utilisateur dans DynamoDB
             </p>
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
@@ -177,9 +184,9 @@ export function UserList() {
               </DialogTrigger>
               <DialogContent className="max-w-4xl">
                 <DialogHeader>
-                  <DialogTitle>Ajouter un nouveau utilisateur</DialogTitle>
+                  <DialogTitle>Ajouter un nouveau utilisateur (DynamoDB)</DialogTitle>
                 </DialogHeader>
-                <UserForm 
+                <DynamoUserForm 
                   onSuccess={handleSuccess} 
                   onCancel={() => setIsAddDialogOpen(false)}
                 />
@@ -190,7 +197,7 @@ export function UserList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {users.map((user) => (
-            <Card key={user.id} className="overflow-hidden">
+            <Card key={user.id} className="overflow-hidden border-orange-200 dark:border-orange-800">
               <CardHeader className="text-center pb-2">
                 <div className="flex justify-center mb-4">
                   <Avatar className="h-20 w-20 border-4 border-background shadow-lg">
@@ -202,6 +209,9 @@ export function UserList() {
                 </div>
                 <CardTitle className="text-lg">{user.name}</CardTitle>
                 <p className="text-sm text-muted-foreground">{user.email}</p>
+                <Badge variant="outline" className="text-xs">
+                  ID: {user.id.substring(0, 8)}...
+                </Badge>
               </CardHeader>
 
               <CardContent className="text-center text-xs text-muted-foreground">
@@ -230,10 +240,10 @@ export function UserList() {
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl">
                     <DialogHeader>
-                      <DialogTitle>Modifier l'utilisateur</DialogTitle>
+                      <DialogTitle>Modifier l'utilisateur (DynamoDB)</DialogTitle>
                     </DialogHeader>
                     {editingUser && (
-                      <UserForm 
+                      <DynamoUserForm 
                         user={editingUser} 
                         onSuccess={handleSuccess}
                         onCancel={() => {
@@ -265,8 +275,8 @@ export function UserList() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Êtes-vous sûr de vouloir supprimer l'utilisateur "{user.name}" ? 
-                        Cette action est irréversible et supprimera également sa photo de profil.
+                        Êtes-vous sûr de vouloir supprimer l'utilisateur "{user.name}" de DynamoDB ? 
+                        Cette action est irréversible et supprimera également sa photo de profil de S3.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -287,4 +297,4 @@ export function UserList() {
       )}
     </div>
   )
-}
+} 

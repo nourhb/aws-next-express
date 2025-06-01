@@ -1,0 +1,180 @@
+\chapter{Introduction}
+
+\section{Introduction}
+
+Dans l'écosystème technologique actuel en constante évolution, le développement d'applications web modernes exige une approche méthodique qui allie innovation technique et gestion de projet rigoureuse. Cette réalité s'impose particulièrement dans le contexte académique où les étudiants doivent démontrer leur capacité à maîtriser à la fois les aspects techniques et méthodologiques du développement logiciel.
+
+Le présent rapport documente le développement d'AWS Next Express, une application full-stack moderne qui illustre l'application pratique de la méthodologie Scrum dans un environnement technologique cloud-native. Ce projet, réalisé en 3 semaines dans le cadre de notre formation à ITEAM University, constitue une synthèse des compétences acquises en développement web, gestion de projet agile, et architecture cloud.
+
+\section{Contexte du Projet}
+
+\subsection{Contexte Académique}
+
+Ce projet s'inscrit dans le cadre du programme d'études en informatique d'ITEAM University, où l'accent est mis sur l'acquisition de compétences pratiques en développement logiciel et en gestion de projet. L'objectif pédagogique consiste à démontrer notre capacité à :
+
+\begin{itemize}
+    \item Concevoir et développer une application web complète
+    \item Appliquer une méthodologie de gestion de projet agile
+    \item Intégrer des technologies cloud modernes
+    \item Documenter et présenter un projet technique de manière professionnelle
+\end{itemize}
+
+\subsection{Contexte Technologique}
+
+L'industrie du développement logiciel privilégie aujourd'hui les architectures cloud-native, les méthodologies agiles, et les pratiques DevOps. Notre projet reflète ces tendances en intégrant :
+
+\begin{itemize}
+    \item \textbf{Technologies modernes} : Next.js 15, React 18, TypeScript
+    \item \textbf{Services cloud AWS} : DynamoDB, S3, infrastructure managée
+    \item \textbf{Pratiques DevOps} : Containerisation, CI/CD, monitoring
+    \item \textbf{Méthodologie Scrum} : Gestion agile adaptée au contexte académique
+\end{itemize}
+
+\section{Problématique et Enjeux}
+
+\subsection{Problématique Principale}
+
+Comment développer une application web moderne en 3 semaines en appliquant efficacement la méthodologie Scrum tout en intégrant les meilleures pratiques de l'architecture cloud et du développement full-stack ?
+
+\subsection{Enjeux Identifiés}
+
+\begin{enumerate}
+    \item \textbf{Enjeu Temporel} : Livraison d'une application fonctionnelle en 3 semaines
+    \item \textbf{Enjeu Méthodologique} : Application rigoureuse de Scrum dans un contexte court
+    \item \textbf{Enjeu Technique} : Maîtrise rapide des technologies cloud et des frameworks modernes
+    \item \textbf{Enjeu Architectural} : Conception d'une architecture scalable et maintenable
+    \item \textbf{Enjeu Qualité} : Garantir la qualité du code malgré les contraintes temporelles
+\end{enumerate}
+
+\section{Objectifs du Projet}
+
+\subsection{Objectifs Principaux}
+
+\begin{enumerate}
+    \item \textbf{Développer une application de gestion d'utilisateurs} complète avec interface moderne
+    \item \textbf{Appliquer la méthodologie Scrum} de manière adaptée au contexte de 3 semaines
+    \item \textbf{Implémenter une architecture cloud-native} utilisant les services AWS
+    \item \textbf{Créer un pipeline DevOps} basique pour le déploiement
+    \item \textbf{Produire une documentation} académique et technique complète
+\end{enumerate}
+
+\subsection{Objectifs Secondaires}
+
+\begin{itemize}
+    \item Démonstration de compétences en design UI/UX moderne
+    \item Mise en place de stratégies de test essentielles
+    \item Application des bonnes pratiques de sécurité
+    \item Optimisation des performances de base
+\end{itemize}
+
+\section{Fonctionnalités de l'Application}
+
+\subsection{Vue d'Ensemble des Fonctionnalités}
+
+AWS Next Express est une application de gestion d'utilisateurs qui offre un ensemble de fonctionnalités essentielles :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/app_overview_diagram.png}
+    \caption{Vue d'ensemble des fonctionnalités d'AWS Next Express}
+    \label{fig:app_overview}
+\end{figure}
+
+\subsection{Fonctionnalités Principales}
+
+\subsubsection{Gestion des Utilisateurs}
+\begin{itemize}
+    \item \textbf{Création d'utilisateurs} : Formulaire avec validation de base
+    \item \textbf{Affichage de la liste} : Vue d'ensemble des utilisateurs enregistrés
+    \item \textbf{Édition de profils} : Modification des informations utilisateur
+    \item \textbf{Suppression} : Suppression simple avec confirmation
+\end{itemize}
+
+\subsubsection{Gestion des Fichiers}
+\begin{itemize}
+    \item \textbf{Upload de photos de profil} : Support des formats courants
+    \item \textbf{Stockage cloud S3} : Intégration AWS pour le stockage
+    \item \textbf{Affichage optimisé} : Images redimensionnées automatiquement
+\end{itemize}
+
+\subsubsection{Interface Utilisateur}
+\begin{itemize}
+    \item \textbf{Dashboard simple} : Vue d'ensemble avec statistiques de base
+    \item \textbf{Design responsive} : Compatible mobile et desktop
+    \item \textbf{Navigation intuitive} : Interface utilisateur claire
+\end{itemize}
+
+\section{Méthodologie et Approche}
+
+\subsection{Choix de la Méthodologie Scrum}
+
+La méthodologie Scrum a été adaptée pour ce projet de 3 semaines en raison de sa capacité à :
+
+\begin{itemize}
+    \item \textbf{Structurer le développement} : Organisation claire en sprints courts
+    \item \textbf{Favoriser la collaboration} : Communication continue entre les membres
+    \item \textbf{Livrer rapidement} : Fonctionnalités utilisables à chaque sprint
+    \item \textbf{S'adapter rapidement} : Ajustements en cours de développement
+\end{itemize}
+
+\subsection{Organisation du Développement}
+
+Le développement s'est organisé autour de 3 sprints d'une semaine chacun :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|c|X|c|}
+        \hline
+        \textbf{Sprint} & \textbf{Objectifs Principaux} & \textbf{Durée} \\
+        \hline
+        Sprint 1 & Configuration projet, interface utilisateur de base & 1 semaine \\
+        \hline
+        Sprint 2 & Intégration backend AWS, CRUD utilisateurs & 1 semaine \\
+        \hline
+        Sprint 3 & Upload fichiers, tests, déploiement & 1 semaine \\
+        \hline
+    \end{tabularx}
+    \caption{Organisation des 3 sprints de développement}
+    \label{tab:sprints_overview}
+\end{table}
+
+\section{Structure du Rapport}
+
+Ce rapport s'articule autour de plusieurs chapitres qui documentent l'ensemble du processus de développement :
+
+\begin{enumerate}
+    \item \textbf{Contexte et État de l'Art} : Analyse des technologies et approches existantes
+    \item \textbf{Méthodologie Scrum} : Application de Scrum sur 3 semaines
+    \item \textbf{Architecture Technique} : Conception système avec diagrammes
+    \item \textbf{Implémentation} : Processus de développement et réalisations
+    \item \textbf{Tests et Validation} : Stratégies de test et assurance qualité
+    \item \textbf{DevOps et Déploiement} : Infrastructure et automatisation
+    \item \textbf{Résultats et Évaluation} : Métriques et analyse des performances
+    \item \textbf{Conclusion} : Bilan et perspectives d'évolution
+\end{enumerate}
+
+\section{Contributions et Valeur Ajoutée}
+
+\subsection{Contributions Techniques}
+\begin{itemize}
+    \item Application web complète Next.js + AWS
+    \item Intégration réussie DynamoDB et S3
+    \item Interface utilisateur moderne et responsive
+    \item Pipeline de déploiement fonctionnel
+\end{itemize}
+
+\subsection{Contributions Méthodologiques}
+\begin{itemize}
+    \item Application pratique de Scrum en contexte académique court
+    \item Gestion efficace des priorités et du temps
+    \item Collaboration structurée sur 3 semaines
+    \item Documentation complète du processus
+\end{itemize}
+
+\section{Conclusion de l'Introduction}
+
+Ce projet AWS Next Express représente une synthèse réussie des compétences techniques et méthodologiques acquises durant notre formation. En combinant une application web moderne avec une approche Scrum adaptée à un contexte de 3 semaines, nous démontrons notre capacité à gérer des projets dans des contraintes temporelles réalistes.
+
+La suite de ce rapport détaille l'ensemble du processus de développement, depuis l'analyse du contexte jusqu'aux résultats obtenus, en passant par l'application de la méthodologie Scrum et les choix techniques réalisés. Chaque chapitre apporte un éclairage spécifique sur les différents aspects du projet, contribuant à une vision globale et cohérente de notre travail.
+
+L'objectif ultime est de fournir un document de référence qui puisse servir à la fois de démonstration de nos compétences et de guide pour de futurs projets similaires dans le contexte académique d'ITEAM University. 

@@ -1,8 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import { v4 as uuidv4 } from "uuid"
-import { createUser, getUsers } from "@/lib/db/users"
-import prisma from "@/lib/db"
+import { dynamoService } from "@/lib/aws/dynamodb-service"
 
 // Initialize S3 client
 const s3Client = new S3Client({
@@ -15,11 +14,11 @@ const s3Client = new S3Client({
 
 export async function GET() {
   try {
-    const users = await getUsers()
+    const users = await dynamoService.getAllUsers()
     return NextResponse.json(users)
   } catch (error) {
-    console.error("Error fetching users:", error)
-    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 })
+    console.error("Error fetching users from DynamoDB:", error)
+    return NextResponse.json({ error: "Failed to fetch users from DynamoDB" }, { status: 500 })
   }
 }
 
@@ -32,6 +31,12 @@ export async function POST(request: NextRequest) {
 
     if (!name || !email) {
       return NextResponse.json({ error: "Name and email are required" }, { status: 400 })
+    }
+
+    // Check if user with email already exists
+    const existingUser = await dynamoService.getUserByEmail(email)
+    if (existingUser) {
+      return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
 
     let profilePictureUrl = ""
@@ -57,8 +62,8 @@ export async function POST(request: NextRequest) {
       profilePictureUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`
     }
 
-    // Save user to RDS using Prisma
-    const user = await createUser({
+    // Save user to DynamoDB
+    const user = await dynamoService.createUser({
       name,
       email,
       profilePictureUrl,
@@ -66,13 +71,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(user, { status: 201 })
   } catch (error) {
-    console.error("Error creating user:", error)
-    
-    // Handle unique constraint violation for email
-    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-      return NextResponse.json({ error: "Email already exists" }, { status: 409 })
-    }
-    
-    return NextResponse.json({ error: "Failed to create user" }, { status: 500 })
+    console.error("Error creating user in DynamoDB:", error)
+    return NextResponse.json({ error: "Failed to create user in DynamoDB" }, { status: 500 })
   }
-}
+} 
