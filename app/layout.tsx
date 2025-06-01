@@ -1,3 +1,4 @@
+import React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "🚀 AWS Next Express - Dual Database Architecture",
-  description: "Application Next.js 15 moderne avec architecture dual RDS + DynamoDB, infrastructure AWS complète, containerisation Docker et orchestration Kubernetes",
+  title: "AWS Next Express - Dual Database App",
+  description: "Application Next.js avec AWS RDS et DynamoDB pour notre projet ITEAM University",
   keywords: [
     "Next.js 15",
     "AWS",
@@ -24,7 +25,6 @@ export const metadata: Metadata = {
     "DynamoDB", 
     "S3",
     "Docker",
-    "Kubernetes",
     "TypeScript",
     "Prisma",
     "ITEAM University"
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   ],
   creator: "ITEAM University Students",
   openGraph: {
-    title: "AWS Next Express - Dual Database Architecture",
-    description: "Architecture révolutionnaire avec support RDS et DynamoDB",
+    title: "AWS Next Express - Dual Database App",
+    description: "Projet étudiant avec support RDS et DynamoDB",
     type: "website",
     locale: "fr_FR",
   },

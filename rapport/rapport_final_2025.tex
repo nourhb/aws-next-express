@@ -69,7 +69,7 @@
     
     {\huge\bfseries AWS Next Express\par}
     \vspace{0.5cm}
-    {\large\bfseries Architecture Dual-Database avec Interface Révolutionnaire\par}
+    {\large\bfseries Application avec Dual Database (RDS + DynamoDB)\par}
     \vspace{2cm}
     
     {\Large Projet de Fin d'Études\par}
@@ -88,7 +88,7 @@
     
     {\large
     \textbf{Technologies:}\\
-    Next.js 15, TypeScript, AWS, Docker, Kubernetes\par}
+    Next.js 15, TypeScript, AWS, Docker\par}
     \vspace{1cm}
     
     {\large Janvier 2025\par}
@@ -106,31 +106,31 @@
 % Chapter 1: Introduction
 \chapter{Introduction}
 
-En tant qu'étudiantes d'ITEAM University, nous avons développé \textbf{AWS Next Express}, une application web révolutionnaire qui dépasse largement les exigences initiales du projet. Ce qui a commencé comme une simple application CRUD s'est transformé en une démonstration spectaculaire d'architecture moderne avec des innovations significatives.
+Pour notre projet final à ITEAM University, nous avons développé \textbf{AWS Next Express}, une application web qui va au-delà des exigences de base. L'idée était de créer quelque chose d'original en utilisant deux bases de données différentes.
 
-Notre application présente une \textbf{architecture dual-database unique} permettant de basculer en temps réel entre Amazon RDS MySQL et DynamoDB, accompagnée d'une interface utilisateur époustouflante avec plus de 50 animations personnalisées.
+Notre application permet de basculer entre Amazon RDS MySQL et DynamoDB en temps réel, avec une interface moderne que nous avons travaillée pour qu'elle soit jolie et interactive.
 
-\section{Réalisations Clés}
+\section{Ce qu'on a réalisé}
 
 \begin{itemize}[label=\textcolor{primary}{$\checkmark$}]
-    \item \textbf{15,000+ lignes de code} écrites avec passion et rigueur technique
-    \item \textbf{Interface révolutionnaire} avec particules animées et effets visuels spectaculaires
-    \item \textbf{Architecture dual-database} première du genre dans un projet étudiant
-    \item \textbf{Containerisation complète} avec 7 services Docker orchestrés
-    \item \textbf{Pipeline CI/CD} professionnel avec GitHub Actions et ArgoCD
-    \item \textbf{Dépassement des exigences} avec fonctionnalités bonus exceptionnelles
+    \item \textbf{Plus de 15,000 lignes de code} écrites par nous
+    \item \textbf{Interface moderne} avec beaucoup d'animations
+    \item \textbf{Dual database} - on peut utiliser RDS ou DynamoDB
+    \item \textbf{Docker} avec plusieurs services
+    \item \textbf{Pipeline CI/CD} pour automatiser le déploiement
+    \item \textbf{Beaucoup de fonctionnalités bonus} qu'on a ajoutées
 \end{itemize}
 
 \section{Innovation et Impact}
 
-Ce projet représente une transformation complète de ce qui était attendu. Nous avons créé non seulement une application fonctionnelle, mais une véritable démonstration de l'excellence technique moderne, intégrant les dernières technologies et pratiques de développement.
+Ce projet représente notre vision d'une application moderne. Nous avons créé non seulement une application fonctionnelle, mais aussi quelque chose qui montre ce qu'on a appris avec les technologies actuelles.
 
 % Chapter 2: Architecture Technique
 \chapter{Architecture Technique}
 
-\section{Architecture Globale}
+\section{Vue d'ensemble}
 
-Notre application suit une architecture en couches moderne qui sépare clairement les responsabilités :
+On a organisé notre app en plusieurs couches :
 
 \begin{figure}[H]
 \centering
@@ -167,9 +167,9 @@ Notre application suit une architecture en couches moderne qui sépare clairemen
 \caption{Architecture en couches de l'application}
 \end{figure}
 
-\section{Innovation : Dual Database Strategy}
+\section{Notre innovation : Dual Database}
 
-L'innovation principale de notre projet réside dans le support simultané de deux bases de données différentes. Cette approche permet de démontrer la flexibilité architecturale et offre une expérience utilisateur unique.
+L'idée principale était de supporter deux bases de données dans la même app :
 
 \begin{lstlisting}[caption=Contexte de base de données avec TypeScript]
 // lib/database-context.tsx
@@ -183,21 +183,17 @@ export const DatabaseContext = createContext<{
   switchDatabase: () => {},
 });
 
-// Utilisation dans les composants
+// Comment on l'utilise dans les composants
 const { currentDb } = useDatabase();
 const UsersComponent = currentDb === 'rds' ? UserList : DynamoUserList;
 \end{lstlisting}
 
-% Chapter 3: Innovation UI/UX
-\chapter{Innovation UI/UX Révolutionnaire}
+% Chapter 3: Interface Utilisateur
+\chapter{Interface Utilisateur}
 
-\section{Transformation Spectaculaire de l'Interface}
+\section{Page d'accueil avec animations}
 
-Nous avons révolutionné l'expérience utilisateur en créant une interface qui dépasse les standards habituels des projets étudiants. Notre approche combine animations sophistiquées, design moderne et interactivité avancée.
-
-\section{Hero Section avec Particules Animées}
-
-La page d'accueil présente une expérience visuelle spectaculaire avec 50 particules animées en temps réel :
+On a passé beaucoup de temps sur la page d'accueil pour qu'elle soit impressionnante :
 
 \begin{lstlisting}[caption=Génération de particules animées]
 // components/hero-header.tsx
@@ -205,7 +201,7 @@ export function HeroHeader() {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    // Génération de 50 particules animées
+    // On génère 50 particules qui bougent
     const newParticles = Array.from({ length: 50 }, (_, i) => ({
       id: i,
       x: Math.random() * 800,
@@ -219,12 +215,12 @@ export function HeroHeader() {
   return (
     <motion.div className="min-h-screen bg-gradient-to-br 
                          from-slate-900 via-purple-900 to-slate-900">
-      {/* 50 particules animées */}
+      {/* Toutes les particules animées */}
       {particles.map((particle) => (
         <Particle key={particle.id} {...particle} />
       ))}
       
-      {/* Logo central avec anneaux orbitaux */}
+      {/* Logo au centre avec des anneaux qui tournent */}
       <motion.div
         className="w-32 h-32 rounded-full bg-gradient-to-br 
                    from-blue-400 via-purple-500 to-pink-500"
@@ -243,9 +239,9 @@ export function HeroHeader() {
 }
 \end{lstlisting}
 
-\section{Système de Thèmes Avancé}
+\section{Système de thèmes}
 
-Nous avons développé un système de thèmes dynamique révolutionnaire avec 5 couleurs et mode sombre/clair :
+On a créé un système pour changer les couleurs :
 
 \begin{itemize}
     \item \textbf{Thèmes de couleur :} Bleu, Violet, Vert, Orange, Rose
@@ -265,7 +261,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = window.document.documentElement;
     
-    // Application des thèmes CSS
+    // On change les classes CSS
     root.classList.remove("theme-blue", "theme-purple", 
                          "theme-green", "theme-orange", "theme-pink");
     root.classList.add(`theme-${colorTheme}`);
@@ -280,9 +276,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 \end{lstlisting}
 
-\section{Dashboard de Métriques Interactif}
+\section{Dashboard avec graphiques}
 
-Un tableau de bord révolutionnaire avec des graphiques animés en temps réel utilisant Recharts :
+On a ajouté un tableau de bord avec des stats du projet :
 
 \begin{itemize}
     \item \textbf{Cartes animées} avec statistiques du projet
@@ -292,13 +288,13 @@ Un tableau de bord révolutionnaire avec des graphiques animés en temps réel u
 \end{itemize}
 
 % Chapter 4: Implémentation Technique
-\chapter{Implémentation Technique Détaillée}
+\chapter{Implémentation Technique}
 
-\section{Services de Base de Données}
+\section{Services pour les bases de données}
 
-\subsection{Service RDS avec Prisma ORM}
+\subsection{Service RDS avec Prisma}
 
-Notre implementation RDS utilise Prisma comme ORM moderne pour une gestion type-safe des données :
+Pour MySQL, on utilise Prisma :
 
 \begin{lstlisting}[caption=Configuration Prisma pour RDS MySQL]
 // lib/prisma.ts
@@ -314,7 +310,7 @@ if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
 
-// Modèle Prisma Schema
+// Modèle dans prisma/schema.prisma
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -325,9 +321,9 @@ model User {
 }
 \end{lstlisting}
 
-\subsection{Service DynamoDB Natif}
+\subsection{Service DynamoDB}
 
-L'implémentation DynamoDB utilise le SDK AWS v3 pour des performances optimales :
+Pour DynamoDB, on utilise le SDK AWS :
 
 \begin{lstlisting}[caption=Service DynamoDB avec AWS SDK v3]
 // lib/aws/dynamodb-service.ts
@@ -380,9 +376,9 @@ class DynamoDBService {
 export const dynamoDBService = new DynamoDBService();
 \end{lstlisting}
 
-\section{États de Chargement Intelligents}
+\section{Loading states}
 
-Nous avons créé des composants de chargement sophistiqués qui s'adaptent au type de base de données utilisée :
+On a fait des composants de chargement qui s'adaptent :
 
 \begin{lstlisting}[caption=États de chargement avec animations]
 // components/loading-states.tsx
@@ -406,7 +402,7 @@ export function DatabaseLoading({ type = "mysql" }:
           <Database className={`h-8 w-8 ${color}`} />
         </motion.div>
         
-        {/* Anneaux de pulsation */}
+        {/* Cercles qui pulsent */}
         {[1, 2, 3].map((i) => (
           <motion.div
             key={i}
@@ -424,11 +420,11 @@ export function DatabaseLoading({ type = "mysql" }:
 \end{lstlisting}
 
 % Chapter 5: DevOps et Infrastructure
-\chapter{DevOps et Infrastructure Moderne}
+\chapter{DevOps et Infrastructure}
 
-\section{Containerisation Complète avec Docker}
+\section{Docker avec plusieurs services}
 
-Notre infrastructure de développement inclut 7 services Docker orchestrés :
+On a configuré Docker pour avoir tout l'environnement :
 
 \begin{lstlisting}[language=yaml, caption=Docker Compose complet]
 # docker-compose.full.yml
@@ -484,9 +480,9 @@ volumes:
   mysql_data:
 \end{lstlisting}
 
-\section{Pipeline CI/CD Professionnel}
+\section{CI/CD avec GitHub Actions}
 
-Notre pipeline d'intégration continue utilise GitHub Actions avec des pratiques DevOps modernes :
+Pipeline automatique :
 
 \begin{lstlisting}[language=yaml, caption=Pipeline CI/CD avec GitHub Actions]
 # .github/workflows/ci-cd.yml
@@ -541,54 +537,12 @@ jobs:
       run: echo "Deploying to staging environment"
 \end{lstlisting}
 
-\section{Orchestration Kubernetes}
-
-Manifests Kubernetes pour un déploiement en production :
-
-\begin{lstlisting}[language=yaml, caption=Déploiement Kubernetes]
-# k8s/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: aws-next-express
-  labels:
-    app: aws-next-express
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: aws-next-express
-  template:
-    metadata:
-      labels:
-        app: aws-next-express
-    spec:
-      containers:
-      - name: app
-        image: aws-next-express:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: database-url
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-\end{lstlisting}
-
 % Chapter 6: Résultats et Métriques
-\chapter{Résultats et Métriques Exceptionnelles}
+\chapter{Résultats}
 
-\section{Métriques de Développement}
+\section{Stats du projet}
 
-Notre projet atteint des métriques impressionnantes qui dépassent largement les standards universitaires :
+Voici ce qu'on a accompli :
 
 \begin{table}[H]
 \centering
@@ -596,20 +550,20 @@ Notre projet atteint des métriques impressionnantes qui dépassent largement le
 \hline
 \textbf{Métrique} & \textbf{Valeur} & \textbf{Description} \\
 \hline
-\textbf{Lignes de Code} & 15,000+ & Code TypeScript/JavaScript de qualité \\
-\textbf{Fichiers} & 80+ & Components, APIs, configs, documentation \\
-\textbf{Composants React} & 25+ & Composants réutilisables et modulaires \\
-\textbf{APIs} & 12 & Endpoints REST pour RDS et DynamoDB \\
-\textbf{Tests} & 85\%+ & Couverture de code avec Jest \\
+\textbf{Lignes de Code} & 15,000+ & Code TypeScript/JavaScript \\
+\textbf{Fichiers} & 80+ & Components, APIs, configs \\
+\textbf{Composants React} & 25+ & Composants réutilisables \\
+\textbf{APIs} & 12 & Endpoints pour RDS et DynamoDB \\
+\textbf{Tests} & 85\%+ & Couverture avec Jest \\
 \textbf{Performance} & 93/100 & Score Lighthouse \\
 \textbf{Animations} & 50+ & Animations Framer Motion \\
 \textbf{Services Docker} & 7 & Infrastructure complète \\
 \hline
 \end{tabular}
-\caption{Métriques quantitatives du projet}
+\caption{Métriques du projet}
 \end{table}
 
-\section{Comparaison des Performances}
+\section{Comparaison RDS vs DynamoDB}
 
 \begin{table}[H]
 \centering
@@ -624,12 +578,12 @@ Scalabilité & Verticale & Horizontale \\
 Complexité & Requêtes SQL & Clé-Valeur \\
 \hline
 \end{tabular}
-\caption{Comparaison des performances entre bases de données}
+\caption{Comparaison des performances}
 \end{table}
 
-\section{Fonctionnalités Réalisées}
+\section{Ce qu'on a fait}
 
-\subsection{Exigences de Base}
+\subsection{Exigences de base}
 \begin{itemize}[label=\textcolor{green}{$\checkmark$}]
     \item Application Next.js 15 avec TypeScript
     \item CRUD utilisateurs complet
@@ -638,159 +592,155 @@ Complexité & Requêtes SQL & Clé-Valeur \\
     \item Base de données opérationnelle
 \end{itemize}
 
-\subsection{Fonctionnalités Bonus Exceptionnelles}
+\subsection{Fonctionnalités bonus}
 \begin{itemize}[label=\textcolor{primary}{$\star$}]
-    \item \textbf{Dual Database Architecture} - Innovation unique
-    \item \textbf{Interface Révolutionnaire} - 50+ animations
-    \item \textbf{Système de Thèmes} - 5 couleurs, dark/light mode
-    \item \textbf{Dashboard Métriques} - Graphiques interactifs
-    \item \textbf{Loading States} - États de chargement intelligents
-    \item \textbf{Containerisation} - Docker Compose complet
-    \item \textbf{Orchestration} - Kubernetes manifests
-    \item \textbf{CI/CD Pipeline} - GitHub Actions + ArgoCD
-    \item \textbf{Monitoring} - Prometheus + Grafana
-    \item \textbf{Documentation} - README détaillé + rapports
+    \item \textbf{Dual Database} - RDS et DynamoDB
+    \item \textbf{Interface moderne} - Beaucoup d'animations
+    \item \textbf{Système de thèmes} - 5 couleurs, dark/light mode
+    \item \textbf{Dashboard} - Graphiques interactifs
+    \item \textbf{Loading states} - États de chargement sympas
+    \item \textbf{Docker} - Compose complet
+    \item \textbf{CI/CD} - GitHub Actions
+    \item \textbf{Documentation} - README et rapports
 \end{itemize}
 
 % Chapter 7: Apprentissages
-\chapter{Apprentissages et Défis Techniques}
+\chapter{Ce qu'on a appris}
 
-\section{Défis Techniques Surmontés}
+\section{Défis qu'on a rencontrés}
 
-\subsection{Architecture Dual-Database}
-\textbf{Défi :} Gérer deux sources de données complètement différentes dans une même application.
+\subsection{Dual Database}
+\textbf{Problème :} Gérer deux bases différentes dans une même application.
 
-\textbf{Solution :} Utilisation du Context API React pour le state management et abstraction des services.
+\textbf{Solution :} Context API React et abstraction des services.
 
-\textbf{Apprentissage :} L'importance de l'abstraction des services pour maintenir la flexibilité architecturale.
+\textbf{Leçon :} L'importance de bien organiser les services.
 
-\subsection{Animations Complexes}
-\textbf{Défi :} Créer 50+ animations fluides sans impact sur les performances.
+\subsection{Animations complexes}
+\textbf{Problème :} Faire plein d'animations sans ralentir.
 
-\textbf{Solution :} Framer Motion avec optimisations CSS et lazy loading.
+\textbf{Solution :} Framer Motion avec optimisations CSS.
 
-\textbf{Apprentissage :} L'équilibre crucial entre expérience utilisateur et performance.
+\textbf{Leçon :} Il faut équilibrer beauté et performance.
 
-\subsection{Infrastructure DevOps}
-\textbf{Défi :} Orchestrer 7 services Docker différents avec leurs dépendances.
+\subsection{Infrastructure Docker}
+\textbf{Problème :} Faire marcher 7 services ensemble.
 
-\textbf{Solution :} Docker Compose avec healthchecks et volumes persistants.
+\textbf{Solution :} Docker Compose avec healthchecks.
 
-\textbf{Apprentissage :} L'infrastructure as code comme fondement de projets scalables.
+\textbf{Leçon :} L'infrastructure as code c'est très pratique.
 
-\section{Compétences Développées}
+\section{Compétences développées}
 
 \subsection{Frontend}
 \begin{itemize}
-    \item \textbf{React 18} avec hooks avancés (useContext, useReducer)
-    \item \textbf{Next.js 15} avec App Router et Server Components
-    \item \textbf{TypeScript} strict mode pour la sécurité du type
-    \item \textbf{Framer Motion} pour animations performantes
-    \item \textbf{Tailwind CSS} avec système de design cohérent
+    \item \textbf{React 18} avec hooks avancés
+    \item \textbf{Next.js 15} avec App Router
+    \item \textbf{TypeScript} partout
+    \item \textbf{Framer Motion} pour les animations
+    \item \textbf{Tailwind CSS} pour le style
 \end{itemize}
 
 \subsection{Backend}
 \begin{itemize}
-    \item \textbf{Prisma ORM} pour la gestion de base relationnelle
+    \item \textbf{Prisma ORM} pour MySQL
     \item \textbf{AWS SDK v3} pour les services cloud
-    \item \textbf{API Routes} Next.js pour les endpoints
-    \item \textbf{Validation} avec Zod schemas
+    \item \textbf{API Routes} Next.js
+    \item \textbf{Validation} avec Zod
 \end{itemize}
 
 \subsection{DevOps}
 \begin{itemize}
-    \item \textbf{Docker} multi-stage builds et optimisations
-    \item \textbf{Kubernetes} déploiement et scaling
-    \item \textbf{GitHub Actions} CI/CD pipelines
-    \item \textbf{Monitoring} avec observabilité complète
+    \item \textbf{Docker} builds optimisés
+    \item \textbf{GitHub Actions} pipelines
+    \item \textbf{Monitoring} complet
 \end{itemize}
 
-\section{Méthodologie de Travail}
+\section{Comment on a travaillé}
 
-Nous avons adopté une approche agile moderne :
+On a utilisé une méthode agile :
 
 \begin{enumerate}
-    \item \textbf{Sprints de 1 semaine} pour itérations rapides
-    \item \textbf{Daily standups} pour coordination d'équipe
-    \item \textbf{Code reviews} systématiques
-    \item \textbf{Tests unitaires} pour assurer la qualité
-    \item \textbf{Documentation} continue et collaborative
+    \item \textbf{Sprints d'1 semaine} pour avancer rapidement
+    \item \textbf{Daily meetings} pour se coordonner
+    \item \textbf{Code reviews} pour s'assurer de la qualité
+    \item \textbf{Tests} pour éviter les bugs
+    \item \textbf{Documentation} au fur et à mesure
 \end{enumerate}
 
 % Chapter 8: Conclusion
-\chapter{Conclusion et Perspectives}
+\chapter{Conclusion}
 
-\section{Réussites Exceptionnelles}
+\section{Ce qu'on a réussi}
 
-Notre projet \textbf{AWS Next Express} dépasse largement les attentes initiales et redéfinit les standards des projets étudiants :
+Notre projet \textbf{AWS Next Express} va bien au-delà de ce qui était demandé :
 
 \begin{enumerate}
-    \item \textbf{Innovation Technique :} L'architecture dual-database est unique dans sa simplicité d'utilisation
-    \item \textbf{Excellence UX :} L'interface révolutionnaire redéfinit l'expérience utilisateur
-    \item \textbf{Qualité Professionnelle :} 15,000+ lignes de code de qualité production
-    \item \textbf{Infrastructure Moderne :} Pipeline DevOps complet avec best practices
+    \item \textbf{Innovation technique :} Le dual-database est original et marche bien
+    \item \textbf{Interface moderne :} L'UI est vraiment belle et interactive
+    \item \textbf{Qualité du code :} 15,000+ lignes de code propre
+    \item \textbf{Infrastructure :} Setup DevOps complet
 \end{enumerate}
 
-\section{Impact Pédagogique}
+\section{Ce qu'on a appris}
 
 Ce projet nous a permis de :
 \begin{itemize}
-    \item \textbf{Maîtriser} l'écosystème React/Next.js moderne
-    \item \textbf{Comprendre} l'architecture cloud AWS en profondeur
-    \item \textbf{Expérimenter} avec des technologies de pointe
-    \item \textbf{Développer} des compétences DevOps professionnelles
+    \item \textbf{Maîtriser} React/Next.js moderne
+    \item \textbf{Comprendre} AWS en profondeur
+    \item \textbf{Expérimenter} avec des nouvelles technos
+    \item \textbf{Développer} des compétences DevOps
 \end{itemize}
 
-\section{Vision Future}
+\section{Prochaines étapes}
 
-Les perspectives d'évolution incluent :
+On pourrait améliorer avec :
 
 \begin{itemize}
-    \item \textbf{Intelligence Artificielle} : Intégration OpenAI pour recommandations
-    \item \textbf{Temps Réel} : WebSockets pour collaboration live
+    \item \textbf{Intelligence Artificielle} : Intégration OpenAI
+    \item \textbf{Temps Réel} : WebSockets pour collaboration
     \item \textbf{Mobile} : Application React Native et PWA
-    \item \textbf{Analytics} : Tableaux de bord avancés avec ML
+    \item \textbf{Analytics} : Tableaux de bord avancés
 \end{itemize}
 
 \section{Remerciements}
 
-Nous remercions chaleureusement :
+Merci à :
 \begin{itemize}
-    \item \textbf{ITEAM University} pour l'opportunité de ce projet ambitieux
-    \item \textbf{Nos professeurs} pour leur guidance technique experte
-    \item \textbf{La communauté open source} pour les outils exceptionnels
-    \item \textbf{AWS} pour l'infrastructure cloud robuste et accessible
+    \item \textbf{ITEAM University} pour l'opportunité
+    \item \textbf{Nos profs} pour les conseils
+    \item \textbf{La communauté open source} pour les outils
+    \item \textbf{AWS} pour l'infrastructure
 \end{itemize}
 
 % Appendices
 \appendix
 
-\chapter{Structure du Projet}
+\chapter{Structure du projet}
 
 \begin{verbatim}
 aws-next-express/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API Routes
-│   ├── globals.css        # Styles globaux
+│   ├── globals.css        # Styles
 │   ├── layout.tsx         # Layout principal
 │   └── page.tsx           # Page d'accueil
 ├── components/            # Composants React
-│   ├── ui/               # Composants UI de base
+│   ├── ui/               # Composants de base
 │   ├── database-selector.tsx
 │   ├── hero-header.tsx
 │   ├── metrics-dashboard.tsx
 │   └── theme-provider.tsx
-├── lib/                   # Services et utilitaires
+├── lib/                   # Services
 │   ├── aws/              # Services AWS
 │   ├── prisma.ts         # Client Prisma
 │   └── utils.ts          # Utilitaires
 ├── docker/               # Configuration Docker
-├── k8s/                  # Manifests Kubernetes
 ├── prisma/               # Schema Prisma
 └── docs/                 # Documentation
 \end{verbatim}
 
-\chapter{Variables d'Environnement}
+\chapter{Variables d'environnement}
 
 \begin{lstlisting}[caption=Configuration environnement]
 # Base de données
@@ -811,33 +761,29 @@ NEXTAUTH_SECRET="your-secret"
 NEXTAUTH_URL="http://localhost:3000"
 \end{lstlisting}
 
-\chapter{Commandes Utiles}
+\chapter{Commandes utiles}
 
 \begin{lstlisting}[language=bash, caption=Commandes de développement]
 # Développement
-npm run dev              # Lancer en mode développement
+npm run dev              # Lancer en dev
 npm run build           # Build production
-npm run test            # Lancer les tests
+npm run test            # Tests
 
 # Docker
-docker-compose up       # Lancer tous les services
+docker-compose up       # Tous les services
 docker-compose -f docker-compose.full.yml up  # Version complète
 
-# Kubernetes
-kubectl apply -f k8s/   # Déployer sur Kubernetes
-kubectl get pods        # Vérifier les pods
-
 # Base de données
-npx prisma migrate dev  # Migrations Prisma
-npx prisma studio      # Interface admin Prisma
+npx prisma migrate dev  # Migrations
+npx prisma studio      # Interface admin
 \end{lstlisting}
 
 \vfill
 
 \begin{center}
-\textbf{Développé avec passion par Nour el houda Bouajila \& Ghofrane Nasri}\\
+\textbf{Développé par Nour el houda Bouajila \& Ghofrane Nasri}\\
 \textbf{🎓 ITEAM University - Janvier 2025}\\
-\textbf{🚀 Projet qui redéfinit les standards du développement étudiant}
+\textbf{🚀 Projet qui nous a appris énormément de choses}
 \end{center}
 
 \end{document} 

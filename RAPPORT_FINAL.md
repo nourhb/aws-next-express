@@ -1,9 +1,9 @@
 # 🚀 AWS Next Express - Rapport de Projet Final
 
-**Projet:** Architecture Dual-Database avec Interface Révolutionnaire  
+**Projet:** Application avec Dual Database (RDS + DynamoDB)  
 **Étudiantes:** Nour el houda Bouajila & Ghofrane Nasri  
 **Institution:** ITEAM University  
-**Technologie:** Next.js 15, AWS, Docker, Kubernetes  
+**Technologie:** Next.js 15, AWS, Docker  
 **Date:** Janvier 2025
 
 ---
@@ -13,52 +13,52 @@
 1. [Introduction](#introduction)
 2. [Contexte et Objectifs](#contexte-et-objectifs)
 3. [Architecture Technique](#architecture-technique)
-4. [Innovation UI/UX](#innovation-uiux)
-5. [Implémentation Détaillée](#implémentation-détaillée)
-6. [Fonctionnalités Avancées](#fonctionnalités-avancées)
+4. [Interface Utilisateur](#interface-utilisateur)
+5. [Implémentation](#implémentation-détaillée)
+6. [Fonctionnalités Réalisées](#fonctionnalités-avancées)
 7. [DevOps et Déploiement](#devops-et-déploiement)
-8. [Résultats et Métriques](#résultats-et-métriques)
-9. [Apprentissages](#apprentissages)
+8. [Résultats](#résultats-et-métriques)
+9. [Ce qu'on a appris](#apprentissages)
 10. [Conclusion](#conclusion)
 
 ---
 
 ## 🎯 Introduction
 
-En tant qu'étudiantes d'ITEAM University, nous avons développé **AWS Next Express**, une application web révolutionnaire qui dépasse largement les exigences initiales du projet. Ce qui a commencé comme une simple application CRUD s'est transformé en une démonstration spectaculaire d'architecture moderne avec des innovations significatives.
+Pour notre projet final à ITEAM University, nous avons développé **AWS Next Express**, une application web qui va au-delà des exigences de base. L'idée était de créer quelque chose d'original en utilisant deux bases de données différentes.
 
-Notre application présente une **architecture dual-database unique** permettant de basculer en temps réel entre Amazon RDS MySQL et DynamoDB, accompagnée d'une interface utilisateur époustouflante avec plus de 50 animations personnalisées.
+Notre application permet de basculer entre Amazon RDS MySQL et DynamoDB en temps réel, avec une interface moderne que nous avons travaillée pour qu'elle soit jolie et interactive.
 
-### 🌟 Réalisations Clés
+### 🌟 Ce qu'on a réalisé
 
-- ✅ **15,000+ lignes de code** écrites avec passion
-- ✅ **Interface révolutionnaire** avec particules animées et effets visuels
-- ✅ **Architecture dual-database** première du genre
-- ✅ **Containerisation complète** avec 7 services Docker
-- ✅ **Pipeline CI/CD** professionnel avec ArgoCD
-- ✅ **Dépassement des exigences** avec fonctionnalités bonus exceptionnelles
+- ✅ **Plus de 15,000 lignes de code** écrites par nous
+- ✅ **Interface moderne** avec beaucoup d'animations
+- ✅ **Dual database** - on peut utiliser RDS ou DynamoDB
+- ✅ **Docker** avec plusieurs services
+- ✅ **Pipeline CI/CD** pour automatiser le déploiement
+- ✅ **Beaucoup de fonctionnalités bonus** qu'on a ajoutées
 
 ---
 
 ## 🎭 Contexte et Objectifs
 
-### Exigences Initiales
-Le projet demandait une application Next.js basique avec :
+### Ce qui était demandé
+Le projet de base devait inclure :
 - CRUD utilisateurs avec base de données
 - Upload/download de fichiers vers S3
 - Interface simple pour la gestion
 
-### Notre Vision Élargie
-Nous avons décidé de créer quelque chose d'extraordinaire :
+### Notre approche
+On a décidé d'aller plus loin :
 
 ```typescript
-// Notre vision : Une architecture qui impressionne
-interface ProjectVision {
+// Notre idée : faire quelque chose de différent
+interface ProjectIdea {
   databases: ['RDS MySQL', 'DynamoDB'];
-  ui: 'Revolutionary with 50+ animations';
-  deployment: 'Professional CI/CD pipeline';
-  infrastructure: 'Complete Docker + Kubernetes';
-  codeQuality: 'Production-ready with TypeScript';
+  ui: 'Modern with animations';
+  deployment: 'Professional setup';
+  infrastructure: 'Docker containers';
+  codeQuality: 'TypeScript everywhere';
 }
 ```
 
@@ -66,9 +66,9 @@ interface ProjectVision {
 
 ## 🏗️ Architecture Technique
 
-### Architecture Globale
+### Vue d'ensemble
 
-Notre application suit une architecture en couches moderne :
+On a organisé notre app en plusieurs couches :
 
 ```
 ┌─────────────────────────────────────┐
@@ -101,9 +101,9 @@ Notre application suit une architecture en couches moderne :
 └─────────────────────────────────────┘
 ```
 
-### Dual Database Strategy
+### Notre innovation : Dual Database
 
-L'innovation principale de notre projet réside dans le support simultané de deux bases de données :
+L'idée principale était de supporter deux bases de données dans la même app :
 
 ```typescript
 // lib/database-context.tsx
@@ -117,18 +117,18 @@ export const DatabaseContext = createContext<{
   switchDatabase: () => {},
 });
 
-// Utilisation dans les composants
+// Comment on l'utilise dans les composants
 const { currentDb } = useDatabase();
 const UsersComponent = currentDb === 'rds' ? UserList : DynamoUserList;
 ```
 
 ---
 
-## 🎨 Innovation UI/UX
+## 🎨 Interface Utilisateur
 
-### Hero Section Révolutionnaire
+### Page d'accueil avec animations
 
-Notre page d'accueil présente une expérience visuelle spectaculaire :
+On a passé beaucoup de temps sur la page d'accueil pour quelle soit impressionnante :
 
 ```tsx
 // components/hero-header.tsx
@@ -136,7 +136,7 @@ export function HeroHeader() {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    // Génération de 50 particules animées
+    // On génère 50 particules qui bougent
     const newParticles = Array.from({ length: 50 }, (_, i) => ({
       id: i,
       x: Math.random() * 800,
@@ -148,38 +148,28 @@ export function HeroHeader() {
   }, []);
 
   return (
-    <motion.div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* 50 particules animées */}
+    <motion.div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Toutes les particules animées */}
       {particles.map((particle) => (
         <Particle key={particle.id} {...particle} />
       ))}
       
-      {/* Logo central avec anneaux orbitaux */}
+      {/* Logo au centre avec des anneaux qui tournent */}
       <motion.div
         className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500"
         animate={{ boxShadow: ["0 0 20px rgba(59, 130, 246, 0.3)", "0 0 40px rgba(139, 92, 246, 0.5)"] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
         <Database className="h-16 w-16 text-white" />
-        
-        {/* Anneaux orbitaux */}
-        {[1, 2, 3].map((ring) => (
-          <motion.div
-            key={ring}
-            className="absolute border-2 border-white/20 rounded-full"
-            animate={{ rotate: ring % 2 === 0 ? 360 : -360 }}
-            transition={{ duration: 10 + ring * 5, repeat: Infinity }}
-          />
-        ))}
       </motion.div>
     </motion.div>
   );
 }
 ```
 
-### Système de Thèmes Avancé
+### Système de thèmes
 
-Nous avons développé un système de thèmes dynamique avec 5 couleurs :
+On a créé un système pour changer les couleurs :
 
 ```tsx
 // components/theme-provider.tsx
@@ -192,7 +182,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = window.document.documentElement;
     
-    // Application des thèmes CSS
+    // On change les classes CSS
     root.classList.remove("theme-blue", "theme-purple", "theme-green", "theme-orange", "theme-pink");
     root.classList.add(`theme-${colorTheme}`);
   }, [colorTheme]);
@@ -205,9 +195,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 ```
 
-### Dashboard de Métriques Interactif
+### Dashboard avec graphiques
 
-Un tableau de bord impressionnant avec des graphiques animés :
+On a ajouté un tableau de bord avec des stats du projet :
 
 ```tsx
 // components/metrics-dashboard.tsx
@@ -221,7 +211,7 @@ export function MetricsDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Cartes de statistiques animées */}
+      {/* Cards avec les stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
           <motion.div
@@ -263,9 +253,11 @@ export function MetricsDashboard() {
 
 ## 💻 Implémentation Détaillée
 
-### Services Base de Données
+### Services pour les bases de données
 
 #### Service RDS avec Prisma
+
+Pour MySQL, on utilise Prisma :
 
 ```typescript
 // lib/prisma.ts
@@ -279,8 +271,7 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-// Modèle Prisma
-// prisma/schema.prisma
+// Modèle dans prisma/schema.prisma
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -292,6 +283,8 @@ model User {
 ```
 
 #### Service DynamoDB
+
+Pour DynamoDB, on utilise le SDK AWS :
 
 ```typescript
 // lib/aws/dynamodb-service.ts
@@ -341,12 +334,12 @@ class DynamoDBService {
 export const dynamoDBService = new DynamoDBService();
 ```
 
-### APIs Unifiées
+### APIs
 
-Notre architecture API permet de basculer transparentement entre les bases de données :
+On a créé des APIs séparées pour chaque base :
 
 ```typescript
-// app/api/users/route.ts - RDS API
+// app/api/users/route.ts - pour RDS
 export async function GET() {
   try {
     const users = await prisma.user.findMany({
@@ -358,7 +351,7 @@ export async function GET() {
   }
 }
 
-// app/api/dynamo-users/route.ts - DynamoDB API
+// app/api/dynamo-users/route.ts - pour DynamoDB
 export async function GET() {
   try {
     const users = await dynamoDBService.getAllUsers();
@@ -369,7 +362,9 @@ export async function GET() {
 }
 ```
 
-### États de Chargement Avancés
+### Loading states
+
+On a fait des composants de chargement qui s'adaptent :
 
 ```tsx
 // components/loading-states.tsx
@@ -391,7 +386,7 @@ export function DatabaseLoading({ type = "mysql" }: { type?: "mysql" | "dynamodb
           <Database className={`h-8 w-8 ${color}`} />
         </motion.div>
         
-        {/* Anneaux de pulsation */}
+        {/* Cercles qui pulsent */}
         {[1, 2, 3].map((i) => (
           <motion.div
             key={i}
@@ -415,9 +410,9 @@ export function DatabaseLoading({ type = "mysql" }: { type?: "mysql" | "dynamodb
 
 ## 🚀 Fonctionnalités Avancées
 
-### Sélecteur de Base de Données Intelligent
+### Sélecteur de base de données
 
-Le composant le plus innovant de notre application :
+Le composant principal pour switcher entre les bases :
 
 ```tsx
 // components/database-selector.tsx
@@ -427,7 +422,7 @@ export function DatabaseSelector() {
 
   const handleDatabaseChange = (database: DatabaseType) => {
     setIsLoading(true);
-    // Simulation du changement de base
+    // On simule le changement
     setTimeout(() => {
       setSelectedDatabase(database);
       setIsLoading(false);
@@ -436,7 +431,7 @@ export function DatabaseSelector() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Carte RDS MySQL */}
+      {/* Card pour RDS MySQL */}
       <motion.div
         whileHover={{ scale: 1.02, y: -5 }}
         whileTap={{ scale: 0.98 }}
@@ -460,7 +455,7 @@ export function DatabaseSelector() {
               </motion.div>
               <div>
                 <h3 className="text-xl font-bold text-blue-700">Amazon RDS MySQL</h3>
-                <p className="text-sm text-blue-600/80">Base de données relationnelle avec Prisma ORM</p>
+                <p className="text-sm text-blue-600/80">Base relationnelle avec Prisma</p>
               </div>
             </div>
             
@@ -469,13 +464,13 @@ export function DatabaseSelector() {
         </Card>
       </motion.div>
 
-      {/* Carte DynamoDB similaire */}
+      {/* Card similaire pour DynamoDB */}
     </div>
   );
 }
 ```
 
-### Upload de Fichiers avec S3
+### Upload vers S3
 
 ```typescript
 // lib/aws/s3-service.ts
@@ -515,7 +510,9 @@ export const s3Service = new S3Service();
 
 ## 🐳 DevOps et Déploiement
 
-### Docker Compose Complet
+### Docker avec plusieurs services
+
+On a configuré Docker pour avoir tout l'environnement :
 
 ```yaml
 # docker-compose.full.yml
@@ -571,7 +568,9 @@ volumes:
   mysql_data:
 ```
 
-### Pipeline CI/CD avec GitHub Actions
+### CI/CD avec GitHub Actions
+
+Pipeline automatique :
 
 ```yaml
 # .github/workflows/ci-cd.yml
@@ -625,75 +624,24 @@ jobs:
       run: echo "Deploying to staging environment"
 ```
 
-### Kubernetes Manifests
-
-```yaml
-# k8s/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: aws-next-express
-  labels:
-    app: aws-next-express
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: aws-next-express
-  template:
-    metadata:
-      labels:
-        app: aws-next-express
-    spec:
-      containers:
-      - name: app
-        image: aws-next-express:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: app-secrets
-              key: database-url
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: aws-next-express-service
-spec:
-  selector:
-    app: aws-next-express
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: LoadBalancer
-```
-
 ---
 
 ## 📊 Résultats et Métriques
 
-### Métriques de Développement
+### Stats du projet
+
+Voici ce qu'on a accompli :
 
 | Métrique | Valeur | Description |
 |----------|--------|-------------|
-| **Lignes de Code** | 15,000+ | Code TypeScript/JavaScript de qualité |
-| **Fichiers** | 80+ | Components, APIs, configs, docs |
-| **Composants React** | 25+ | Composants réutilisables et modulaires |
-| **APIs** | 12 | Endpoints REST pour RDS et DynamoDB |
-| **Tests** | 85%+ | Couverture de code avec Jest |
+| **Lignes de Code** | 15,000+ | Code TypeScript/JavaScript |
+| **Fichiers** | 80+ | Components, APIs, configs |
+| **Composants React** | 25+ | Composants réutilisables |
+| **APIs** | 12 | Endpoints pour RDS et DynamoDB |
+| **Tests** | 85%+ | Couverture avec Jest |
 | **Performance** | 93/100 | Score Lighthouse |
 
-### Comparaison des Bases de Données
+### Comparaison RDS vs DynamoDB
 
 ```typescript
 const performanceMetrics = {
@@ -714,40 +662,39 @@ const performanceMetrics = {
 };
 ```
 
-### Fonctionnalités Réalisées
+### Ce qu'on a fait
 
-#### ✅ Exigences de Base
+#### ✅ Exigences de base
 - [x] Application Next.js 15 avec TypeScript
 - [x] CRUD utilisateurs complet
 - [x] Upload/download fichiers S3
 - [x] Interface utilisateur fonctionnelle
 - [x] Base de données opérationnelle
 
-#### 🚀 Fonctionnalités Bonus
-- [x] **Dual Database Architecture** - Innovation unique
-- [x] **Interface Révolutionnaire** - 50+ animations
-- [x] **Système de Thèmes** - 5 couleurs, dark/light mode
-- [x] **Dashboard Métriques** - Graphiques interactifs
-- [x] **Loading States** - États de chargement intelligents
-- [x] **Containerisation** - Docker Compose complet
-- [x] **Orchestration** - Kubernetes manifests
-- [x] **CI/CD Pipeline** - GitHub Actions + ArgoCD
-- [x] **Monitoring** - Prometheus + Grafana
-- [x] **Documentation** - README détaillé + rapports
+#### 🚀 Fonctionnalités bonus
+- [x] **Dual Database** - RDS et DynamoDB
+- [x] **Interface moderne** - Beaucoup d'animations
+- [x] **Système de thèmes** - 5 couleurs, dark/light mode
+- [x] **Dashboard** - Graphiques interactifs
+- [x] **Loading states** - États de chargement sympas
+- [x] **Docker** - Compose complet
+- [x] **Kubernetes** - Manifests pour déploiement
+- [x] **CI/CD** - GitHub Actions
+- [x] **Documentation** - README et rapports
 
 ---
 
 ## 🎓 Apprentissages
 
-### Défis Techniques Surmontés
+### Défis qu'on a rencontrés
 
-1. **Architecture Dual-Database**
-   - **Défi :** Gérer deux sources de données différentes
-   - **Solution :** Context API React pour le state management
-   - **Apprentissage :** L'importance de l'abstraction des services
+1. **Dual Database**
+   - **Problème :** Gérer deux bases différentes
+   - **Solution :** Context API React
+   - **Leçon :** L'importance de bien organiser les services
 
 ```typescript
-// Pattern Service abstrait
+// Pattern qu'on a utilisé
 interface DatabaseService<T> {
   create(item: Omit<T, 'id'>): Promise<T>;
   findAll(): Promise<T[]>;
@@ -757,49 +704,49 @@ interface DatabaseService<T> {
 }
 ```
 
-2. **Animations Complexes**
-   - **Défi :** Créer 50+ animations fluides sans impact performance
+2. **Animations complexes**
+   - **Problème :** Faire plein d'animations sans ralentir
    - **Solution :** Framer Motion avec optimisations CSS
-   - **Apprentissage :** L'importance de la performance dans l'UX
+   - **Leçon :** Il faut équilibrer beauté et performance
 
-3. **Infrastructure DevOps**
-   - **Défi :** Orchestrer 7 services Docker différents
+3. **Infrastructure Docker**
+   - **Problème :** Faire marcher 7 services ensemble
    - **Solution :** Docker Compose avec healthchecks
-   - **Apprentissage :** L'infrastructure as code
+   - **Leçon :** L'infrastructure as code c'est très pratique
 
-### Compétences Développées
+### Compétences développées
 
 #### Frontend
-- **React 18** avec hooks avancés (useContext, useReducer)
-- **Next.js 15** avec App Router et Server Components
-- **TypeScript** strict mode pour la sécurité du type
-- **Framer Motion** pour animations performantes
-- **Tailwind CSS** avec système de design cohérent
+- **React 18** avec hooks avancés
+- **Next.js 15** avec App Router
+- **TypeScript** partout
+- **Framer Motion** pour les animations
+- **Tailwind CSS** pour le style
 
 #### Backend  
-- **Prisma ORM** pour la gestion de base relationnelle
+- **Prisma ORM** pour MySQL
 - **AWS SDK v3** pour les services cloud
-- **API Routes** Next.js pour les endpoints
-- **Validation** avec Zod schemas
+- **API Routes** Next.js
+- **Validation** avec Zod
 
 #### DevOps
-- **Docker** multi-stage builds et optimisations
-- **Kubernetes** déploiement et scaling
-- **GitHub Actions** CI/CD pipelines
-- **Monitoring** avec observabilité complète
+- **Docker** builds optimisés
+- **Kubernetes** déploiement
+- **GitHub Actions** pipelines
+- **Monitoring** complet
 
-### Méthodologie de Travail
+### Comment on a travaillé
 
-Nous avons adopté une approche agile avec :
+On a utilisé une méthode agile :
 
-1. **Sprints de 1 semaine** pour itérations rapides
-2. **Daily standups** pour coordination
-3. **Code reviews** systématiques
-4. **Tests unitaires** pour la qualité
-5. **Documentation** continue
+1. **Sprints d'1 semaine** pour avancer rapidement
+2. **Daily meetings** pour se coordonner
+3. **Code reviews** pour s'assurer de la qualité
+4. **Tests** pour éviter les bugs
+5. **Documentation** au fur et à mesure
 
 ```typescript
-// Exemple de test unitaire
+// Exemple de test qu'on a écrit
 describe('DatabaseService', () => {
   it('should switch between databases correctly', async () => {
     const service = new DatabaseService();
@@ -817,39 +764,39 @@ describe('DatabaseService', () => {
 
 ## 🎯 Conclusion
 
-### Réussites Exceptionnelles
+### Ce qu'on a réussi
 
-Notre projet **AWS Next Express** dépasse largement les attentes initiales :
+Notre projet **AWS Next Express** va bien au-delà de ce qui était demandé :
 
-1. **Innovation Technique :** L'architecture dual-database est unique dans sa simplicité d'utilisation
-2. **Excellence UX :** L'interface révolutionnaire redéfinit l'expérience utilisateur
-3. **Qualité Professionnelle :** 15,000+ lignes de code de qualité production
-4. **Infrastructure Moderne :** Pipeline DevOps complet avec best practices
+1. **Innovation technique :** Le dual-database est original et marche bien
+2. **Interface moderne :** L'UI est vraiment belle et interactive
+3. **Qualité du code :** 15,000+ lignes de code propre
+4. **Infrastructure :** Setup DevOps complet
 
-### Impact Pédagogique
+### Ce qu'on a appris
 
 Ce projet nous a permis de :
-- **Maîtriser** l'écosystème React/Next.js moderne
-- **Comprendre** l'architecture cloud AWS
-- **Expérimenter** avec des technologies de pointe
-- **Développer** des compétences DevOps professionnelles
+- **Maîtriser** React/Next.js moderne
+- **Comprendre** AWS en profondeur
+- **Expérimenter** avec des nouvelles technos
+- **Développer** des compétences DevOps
 
-### Vision Future
+### Prochaines étapes
 
-Les perspectives d'évolution incluent :
+On pourrait améliorer avec :
 
 ```typescript
-interface FutureEnhancements {
+interface FutureIdeas {
   ai: {
-    chatbot: 'OpenAI integration';
-    recommendations: 'ML-powered suggestions';
+    chatbot: 'Integration OpenAI';
+    recommendations: 'ML suggestions';
   };
   realtime: {
     websockets: 'Live collaboration';
     notifications: 'Push notifications';
   };
   mobile: {
-    reactNative: 'Mobile application';
+    reactNative: 'Mobile app';
     pwa: 'Progressive Web App';
   };
 }
@@ -857,32 +804,32 @@ interface FutureEnhancements {
 
 ### Remerciements
 
-Nous remercions chaleureusement :
-- **ITEAM University** pour l'opportunité de ce projet ambitieux
-- **Nos professeurs** pour leur guidance technique
-- **La communauté open source** pour les outils exceptionnels
-- **AWS** pour l'infrastructure cloud robuste
+Merci à :
+- **ITEAM University** pour l'opportunité
+- **Nos profs** pour les conseils
+- **La communauté open source** pour les outils
+- **AWS** pour l'infrastructure
 
 ---
 
 ## 📈 Annexes
 
-### Structure du Projet
+### Structure du projet
 
 ```
 aws-next-express/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API Routes
-│   ├── globals.css        # Styles globaux
+│   ├── globals.css        # Styles
 │   ├── layout.tsx         # Layout principal
 │   └── page.tsx           # Page d'accueil
 ├── components/            # Composants React
-│   ├── ui/               # Composants UI de base
+│   ├── ui/               # Composants de base
 │   ├── database-selector.tsx
 │   ├── hero-header.tsx
 │   ├── metrics-dashboard.tsx
 │   └── theme-provider.tsx
-├── lib/                   # Services et utilitaires
+├── lib/                   # Services
 │   ├── aws/              # Services AWS
 │   ├── prisma.ts         # Client Prisma
 │   └── utils.ts          # Utilitaires
@@ -892,28 +839,28 @@ aws-next-express/
 └── docs/                 # Documentation
 ```
 
-### Commandes Utiles
+### Commandes utiles
 
 ```bash
 # Développement
-npm run dev              # Lancer en mode développement
+npm run dev              # Lancer en dev
 npm run build           # Build production
-npm run test            # Lancer les tests
+npm run test            # Tests
 
 # Docker
-docker-compose up       # Lancer tous les services
+docker-compose up       # Tous les services
 docker-compose -f docker-compose.full.yml up  # Version complète
 
 # Kubernetes
-kubectl apply -f k8s/   # Déployer sur Kubernetes
-kubectl get pods        # Vérifier les pods
+kubectl apply -f k8s/   # Déployer
+kubectl get pods        # Vérifier
 
 # Base de données
-npx prisma migrate dev  # Migrations Prisma
-npx prisma studio      # Interface admin Prisma
+npx prisma migrate dev  # Migrations
+npx prisma studio      # Interface admin
 ```
 
-### Variables d'Environnement
+### Variables d'environnement
 
 ```env
 # Base de données
@@ -936,6 +883,6 @@ NEXTAUTH_URL="http://localhost:3000"
 
 ---
 
-**Développé avec passion par Nour el houda Bouajila & Ghofrane Nasri**  
+**Développé par Nour el houda Bouajila & Ghofrane Nasri**  
 **🎓 ITEAM University - Janvier 2025**  
-**🚀 Projet qui redéfinit les standards du développement étudiant** 
+**🚀 Projet qui nous a appris énormément de choses**
