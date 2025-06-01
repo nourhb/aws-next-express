@@ -69,13 +69,10 @@ export default function RootLayout({
         >
           <div className="relative min-h-screen">
             {/* Background pattern */}
-            <div className="fixed inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)] dark:bg-black dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] opacity-20" />
-            
-            {/* Grain texture overlay */}
-            <div className="fixed inset-0 -z-10 opacity-20">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.4"/%3E%3C/svg%3E')] animate-pulse" />
+            <div className="fixed inset-0 -z-10 h-full w-full bg-white dark:bg-black opacity-20">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950 dark:via-purple-950 dark:to-pink-950" />
             </div>
-
+            
             {/* Main content */}
             <main className="relative z-10">
               {children}

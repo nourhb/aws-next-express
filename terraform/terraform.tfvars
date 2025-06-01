@@ -1,9 +1,9 @@
 aws_region     = "us-east-1"
-s3_bucket_name = "my-app-files-bucket"
-vpc_id         = "vpc-12345678" # Replace with your VPC ID
-subnet_ids     = ["subnet-12345678", "subnet-87654321"] # Replace with your subnet IDs
-db_name        = "appdb"
+s3_bucket_name = "your-unique-app-files-bucket-2024" # Must be globally unique
+vpc_id         = "vpc-0123456789abcdef0" # Replace with your actual VPC ID
+subnet_ids     = ["subnet-0123456789abcdef0", "subnet-0987654321fedcba0"] # Replace with your actual subnet IDs
+db_name        = "nextapp_db"
 db_username    = "admin"
-db_password    = "YourStrongPasswordHere" # Replace with a secure password
-key_name       = "your-key-pair" # Replace with your key pair name
-github_repo    = "https://github.com/yourusername/your-repo.git" # Replace with your GitHub repo
+db_password    = "SecurePassword123!" # Use a strong password
+key_name       = "my-aws-keypair" # Replace with your actual EC2 Key Pair name
+github_repo    = "https://github.com/nourhb/aws-next-express.git" # Replace with your actual GitHub repo
