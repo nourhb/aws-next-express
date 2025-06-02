@@ -12,19 +12,16 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Data sources to get VPC and subnets
-data "aws_vpc" "selected" {
-  id = var.vpc_id
+# Get default VPC
+data "aws_vpc" "default" {
+  default = true
 }
 
-data "aws_subnets" "selected" {
+# Get default subnets
+data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
-    values = [var.vpc_id]
-  }
-  filter {
-    name   = "subnet-id"
-    values = var.subnet_ids
+    values = [data.aws_vpc.default.id]
   }
 }
 
@@ -67,7 +64,7 @@ resource "aws_s3_bucket_public_access_block" "app_bucket_pab" {
 # Security Group for EC2
 resource "aws_security_group" "ec2_sg" {
   name_prefix = "${var.project_name}-ec2-"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description = "SSH"
@@ -179,10 +176,10 @@ resource "aws_instance" "app_server" {
   instance_type          = var.instance_type
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
-  subnet_id              = var.subnet_ids[0]
+  subnet_id              = data.aws_subnets.default.ids[0]
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
-  user_data = base64encode(templatefile("${path.module}/user_data_simple.sh", {
+  user_data = base64encode(templatefile("${path.module}/user_data_minimal.sh", {
     s3_bucket_name = var.s3_bucket_name
     aws_region     = var.aws_region
     github_repo    = var.github_repo

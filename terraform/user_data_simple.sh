@@ -1,54 +1,92 @@
 #!/bin/bash
 
+# Comprehensive logging
+exec > >(tee /var/log/user-data.log) 2>&1
+set -x
+
+echo "=== Starting AWS Next.js Express Deployment at $(date) ==="
+
 # Update system
+echo "=== Updating system ==="
 yum update -y
 
 # Install Node.js 18
+echo "=== Installing Node.js 18 ==="
 curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
 yum install -y nodejs
 
+# Verify Node.js installation
+echo "Node.js version: $(node --version)"
+echo "NPM version: $(npm --version)"
+
 # Install Git
+echo "=== Installing Git ==="
 yum install -y git
 
-# Install Docker
-yum install -y docker
-systemctl start docker
-systemctl enable docker
-usermod -a -G docker ec2-user
+# Install PM2 globally
+echo "=== Installing PM2 ==="
+npm install -g pm2
 
-# Install Docker Compose
-curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+# Create app directory and set permissions
+echo "=== Setting up application directory ==="
+mkdir -p /home/ec2-user/app
+cd /home/ec2-user
 
 # Clone repository
-cd /home/ec2-user
+echo "=== Cloning repository ==="
+if [ -d "app" ]; then
+    rm -rf app
+fi
+
 git clone ${github_repo} app
 cd app
 
-# Install dependencies
-npm install
-
-# Build application
-npm run build
+# Set proper ownership
+chown -R ec2-user:ec2-user /home/ec2-user/app
 
 # Create environment file
-cat > .env.production << EOF
+echo "=== Creating environment file ==="
+sudo -u ec2-user cat > .env.local << EOF
 NODE_ENV=production
 AWS_REGION=${aws_region}
 AWS_S3_BUCKET=${s3_bucket_name}
-DATABASE_URL=mysql://admin:password@localhost:3306/nextapp_db
-REDIS_URL=redis://localhost:6379
+PORT=3000
+NEXT_TELEMETRY_DISABLED=1
 EOF
 
-# Start application with PM2
-npm install -g pm2
-pm2 start npm --name "nextjs-app" -- start
-pm2 startup
-pm2 save
+echo "=== Installing dependencies ==="
+# Install dependencies as ec2-user
+sudo -u ec2-user npm install --production
 
-# Setup nginx reverse proxy
+echo "=== Building application ==="
+# Build application as ec2-user
+sudo -u ec2-user npm run build
+
+echo "=== Starting application with PM2 ==="
+# Start application with PM2 as ec2-user
+sudo -u ec2-user pm2 start npm --name "nextjs-app" -- start
+sudo -u ec2-user pm2 startup
+sudo -u ec2-user pm2 save
+
+# Wait for application to start
+echo "=== Waiting for application to start ==="
+sleep 15
+
+# Test if application is running
+echo "=== Testing application ==="
+if curl -f http://localhost:3000; then
+    echo "✅ Application is running successfully!"
+else
+    echo "❌ Application failed to start, checking logs..."
+    sudo -u ec2-user pm2 logs nextjs-app --lines 50
+fi
+
+# Install and configure nginx as reverse proxy
+echo "=== Installing and configuring Nginx ==="
 yum install -y nginx
-cat > /etc/nginx/conf.d/app.conf << EOF
+
+# Create nginx configuration
+cat > /etc/nginx/conf.d/app.conf << 'EOF'
 server {
     listen 80;
     server_name _;
@@ -56,21 +94,50 @@ server {
     location / {
         proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 }
 EOF
 
+# Remove default nginx config
+rm -f /etc/nginx/sites-enabled/default
+
+# Start and enable nginx
 systemctl start nginx
 systemctl enable nginx
 
-# Log deployment
-echo "$(date): AWS Next.js Express deployment completed" >> /var/log/app-deployment.log
-echo "S3 Bucket: ${s3_bucket_name}" >> /var/log/app-deployment.log
-echo "AWS Region: ${aws_region}" >> /var/log/app-deployment.log 
+# Test nginx
+echo "=== Testing Nginx ==="
+if curl -f http://localhost; then
+    echo "✅ Nginx is working!"
+else
+    echo "❌ Nginx failed to start"
+    systemctl status nginx
+fi
+
+# Final status check
+echo "=== Final Status Check ==="
+echo "PM2 Status:"
+sudo -u ec2-user pm2 status
+
+echo "Nginx Status:"
+systemctl status nginx --no-pager
+
+echo "Port 3000 Status:"
+netstat -tlnp | grep :3000
+
+echo "Port 80 Status:"
+netstat -tlnp | grep :80
+
+echo "=== Deployment completed at $(date) ==="
+echo "Application should be accessible at http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000"
+echo "And via Nginx at http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)" 

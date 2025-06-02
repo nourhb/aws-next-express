@@ -407,83 +407,89 @@ export function DatabaseSelector() {
           </TabsList>
 
           <AnimatePresence mode="wait">
-            <TabsContent value="users" className="space-y-4">
-              <motion.div
-                key="users"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <Users className="h-5 w-5" />
-                        Gestion des Utilisateurs
-                      </span>
-                      <Badge variant="outline" className="animate-pulse">
-                        {selectedDatabase === 'rds' ? 'RDS MySQL' : 'DynamoDB'}
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoading ? (
-                      <DatabaseLoading type={selectedDatabase === 'rds' ? 'mysql' : 'dynamodb'} />
-                    ) : selectedDatabase === 'rds' ? (
-                      <UserList />
-                    ) : (
-                      <DynamoUserList />
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </TabsContent>
+            {contentType === "users" && (
+              <TabsContent key="users-tab" value="users" className="space-y-4">
+                <motion.div
+                  key="users-content"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <Users className="h-5 w-5" />
+                          Gestion des Utilisateurs
+                        </span>
+                        <Badge variant="outline" className="animate-pulse">
+                          {selectedDatabase === 'rds' ? 'RDS MySQL' : 'DynamoDB'}
+                        </Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {isLoading ? (
+                        <DatabaseLoading type={selectedDatabase === 'rds' ? 'mysql' : 'dynamodb'} />
+                      ) : selectedDatabase === 'rds' ? (
+                        <UserList />
+                      ) : (
+                        <DynamoUserList />
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            )}
 
-            <TabsContent value="files" className="space-y-4">
-              <motion.div
-                key="files"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
-                        Gestion des Fichiers
-                      </span>
-                      <Badge variant="outline" className="animate-pulse">
-                        S3 + {selectedDatabase === 'rds' ? 'Métadonnées en mémoire' : 'DynamoDB'}
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoading ? (
-                      <DatabaseLoading type={selectedDatabase === 'rds' ? 'mysql' : 'dynamodb'} />
-                    ) : selectedDatabase === 'rds' ? (
-                      <FileList />
-                    ) : (
-                      <DynamoFileList />
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </TabsContent>
+            {contentType === "files" && (
+              <TabsContent key="files-tab" value="files" className="space-y-4">
+                <motion.div
+                  key="files-content"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          Gestion des Fichiers
+                        </span>
+                        <Badge variant="outline" className="animate-pulse">
+                          S3 + {selectedDatabase === 'rds' ? 'Métadonnées en mémoire' : 'DynamoDB'}
+                        </Badge>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {isLoading ? (
+                        <DatabaseLoading type={selectedDatabase === 'rds' ? 'mysql' : 'dynamodb'} />
+                      ) : selectedDatabase === 'rds' ? (
+                        <FileList />
+                      ) : (
+                        <DynamoFileList />
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            )}
 
-            <TabsContent value="metrics" className="space-y-4">
-              <motion.div
-                key="metrics"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <MetricsDashboard />
-              </motion.div>
-            </TabsContent>
+            {contentType === "metrics" && (
+              <TabsContent key="metrics-tab" value="metrics" className="space-y-4">
+                <motion.div
+                  key="metrics-content"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <MetricsDashboard />
+                </motion.div>
+              </TabsContent>
+            )}
           </AnimatePresence>
         </Tabs>
       </motion.div>

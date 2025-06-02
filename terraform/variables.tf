@@ -11,7 +11,7 @@ variable "project_name" {
 }
 
 variable "environment" {
-  description = "Environment name"
+  description = "Environment (dev, staging, prod)"
   type        = string
   default     = "production"
 }
@@ -21,14 +21,20 @@ variable "s3_bucket_name" {
   type        = string
 }
 
-variable "vpc_id" {
-  description = "VPC ID where resources will be created"
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "key_name" {
+  description = "AWS Key Pair name"
   type        = string
 }
 
-variable "subnet_ids" {
-  description = "List of subnet IDs"
-  type        = list(string)
+variable "github_repo" {
+  description = "GitHub repository URL"
+  type        = string
 }
 
 variable "db_name" {
@@ -50,23 +56,20 @@ variable "db_password" {
 }
 
 variable "db_instance_class" {
-  description = "RDS instance class"
+  description = "Database instance class"
   type        = string
   default     = "db.t3.micro"
 }
 
-variable "instance_type" {
-  description = "EC2 instance type"
+# Optional VPC variables (will use default VPC if not provided)
+variable "vpc_id" {
+  description = "VPC ID (optional - will use default VPC if empty)"
   type        = string
-  default     = "t2.micro"
+  default     = ""
 }
 
-variable "key_name" {
-  description = "EC2 Key Pair name"
-  type        = string
-}
-
-variable "github_repo" {
-  description = "GitHub repository URL"
-  type        = string
+variable "subnet_ids" {
+  description = "Subnet IDs (optional - will use default subnets if empty)"
+  type        = list(string)
+  default     = []
 } 

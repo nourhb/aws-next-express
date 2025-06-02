@@ -21,6 +21,6 @@ key_name = "aws-next-express-key"
 # GitHub Repository
 github_repo = "https://github.com/nourhb/aws-next-express.git"
 
-# VPC Configuration (your actual VPC and subnets)
-vpc_id = "vpc-063853ea20b8082b9"
-subnet_ids = ["subnet-0b15a91fd7242694e", "subnet-03b3bef7dbc4e5f59"]
+# VPC Configuration (using default VPC - will be auto-detected)
+vpc_id = ""
+subnet_ids = []
