@@ -1,106 +1,32 @@
-# AWS Next.js Express
+<h1 align="center">Hi 👋, I'm Nourhb</h1>
+<h3 align="center">Cloud & Virtualization Engineer</h3>
 
-Modern full-stack application with enterprise deployment capabilities.
+- 🔭 I'm currently working on *CloudDevOpsHub*
 
-## ⚡ Quick Start
+- 🌱 I'm currently learning *AWS, Kubernetes, Terraform, GitHub Actions, Prometheus, Grafana*
 
-```bash
-npm install
-npm run dev
-```
+- 👯 I'm looking to collaborate on *Smart Cloud Monitoring Platform*
 
-## 🚀 Deployment Options
+- 🤝 I'm looking for help with *AI integration in Virtualization Automation*
 
-| Method | Command | Use Case |
-|--------|---------|----------|
-| **Development** | `npm run dev` | Local development |
-| **Docker** | `npm run docker:compose:prod` | Production testing |
-| **Kubernetes** | `npm run k8s:deploy:full` | Cloud production |
-| **AWS** | `npm run terraform:apply` | Infrastructure |
+- 👨‍💻 All of my projects are available at [http://nourelhoudabouajila.rf.gd/](http://nourelhoudabouajila.rf.gd/)
 
-## 🛠️ Tech Stack
+- 💬 Ask me about *Cloud Infrastructure, DevOps Pipelines, Virtualization (VMware/Proxmox), Monitoring & Logging*
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS, Radix UI
-- **Database**: MySQL, Prisma ORM
-- **Cache**: Redis
-- **Auth**: NextAuth.js
-- **Cloud**: AWS (S3, RDS, EC2)
-- **Container**: Docker, Kubernetes
-- **Infrastructure**: Terraform
-- **Monitoring**: Prometheus, Grafana
+- 📫 How to reach me *nourhb58@gmail.com*
 
-## 📦 Docker Setup
+- 📄 Know about my experiences [https://nour-el-houda-bouajila.rf.gd/wp-content/uploads/2024/09/Nour-El-Houda-Bouajila-1.pdf](https://nour-el-houda-bouajila.rf.gd/wp-content/uploads/2024/09/Nour-El-Houda-Bouajila-1.pdf)
 
-```bash
-# Copy environment template
-Copy-Item docker.env.template .env.production
+- ⚡ Fun fact *I can spin up a full cloud infrastructure faster than I can decide what to eat for lunch. 🍔💻*
 
-# Edit .env.production with your values
-# Start full stack
-npm run docker:compose:prod
-```
+<h3 align="left">Connect with me:</h3>
+<p align="left">
+<a href="https://linkedin.com/in/https://www.linkedin.com/in/nour-el-houda-bouajila/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="https://www.linkedin.com/in/nour-el-houda-bouajila/" height="30" width="40" /></a>
+<a href="https://fb.com/https://www.facebook.com/nour.hb.22/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="https://www.facebook.com/nour.hb.22/" height="30" width="40" /></a>
+<a href="https://instagram.com/https://www.instagram.com/nour_houda_bg/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="https://www.instagram.com/nour_houda_bg/" height="30" width="40" /></a>
+</p>
 
-**Access Points:**
-- App: http://localhost:3000
-- Grafana: http://localhost:3001
-- Prometheus: http://localhost:9090
+<h3 align="left">Languages and Tools:</h3>
+<p align="left"> <a href="https://developer.android.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original-wordmark.svg" alt="android" width="40" height="40"/> </a> <a href="https://aws.amazon.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="aws" width="40" height="40"/> </a> <a href="https://azure.microsoft.com/en-in/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-icon.svg" alt="azure" width="40" height="40"/> </a> <a href="https://www.gnu.org/software/bash/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/gnu_bash/gnu_bash-icon.svg" alt="bash" width="40" height="40"/> </a> <a href="https://www.blender.org/" target="_blank" rel="noreferrer"> <img src="https://download.blender.org/branding/community/blender_community_badge_white.svg" alt="blender" width="40" height="40"/> </a> <a href="https://www.chartjs.org" target="_blank" rel="noreferrer"> <img src="https://www.chartjs.org/media/logo-title.svg" alt="chartjs" width="40" height="40"/> </a> <a href="https://circleci.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/circleci/circleci-icon.svg" alt="circleci" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://www.docker.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg" alt="docker" width="40" height="40"/> </a> <a href="https://expressjs.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="40" height="40"/> </a> <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="figma" width="40" height="40"/> </a> <a href="https://firebase.google.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a> <a href="https://flask.palletsprojects.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/pocoo_flask/pocoo_flask-icon.svg" alt="flask" width="40" height="40"/> </a> <a href="https://cloud.google.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg" alt="gcp" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://heroku.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="heroku" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.jenkins.io" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/jenkins/jenkins-icon.svg" alt="jenkins" width="40" height="40"/> </a> <a href="https://kubernetes.io" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/kubernetes/kubernetes-icon.svg" alt="kubernetes" width="40" height="40"/> </a> <a href="https://laravel.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/laravel/laravel-plain-wordmark.svg" alt="laravel" width="40" height="40"/> </a> <a href="https://www.linux.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="linux" width="40" height="40"/> </a> <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="40" height="40"/> </a> <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="40" height="40"/> </a> <a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg" alt="php" width="40" height="40"/> </a> <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="40" height="40"/> </a> <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="40" height="40"/> </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://travis-ci.org" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/travis-ci/travis-ci-icon.svg" alt="travisci" width="40" height="40"/> </a> <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/> </a> <a href="https://www.vagrantup.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/vagrantup/vagrantup-icon.svg" alt="vagrant" width="40" height="40"/> </a> <a href="https://zapier.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/zapier/zapier-icon.svg" alt="zapier" width="40" height="40"/> </a> </p>
 
-## ☸️ Kubernetes Deployment
-
-```bash
-# Update k8s/secrets.yaml
-# Deploy to cluster
-npm run k8s:deploy:full
-```
-
-## 🏗️ AWS Infrastructure
-
-```bash
-# Update terraform/terraform.tfvars
-terraform init
-terraform apply
-```
-
-## 📋 Environment Variables
-
-```env
-DATABASE_URL=mysql://user:pass@host:port/db
-AWS_REGION=us-east-1
-AWS_S3_BUCKET_NAME=your-bucket
-NEXTAUTH_SECRET=your-secret
-```
-
-## 🔧 Available Scripts
-
-```bash
-npm run dev              # Development server
-npm run build            # Production build
-npm run test             # Run tests
-
-npm run docker:build:prod        # Build production image
-npm run docker:compose:prod      # Full stack
-
-npm run k8s:deploy:full          # Deploy to Kubernetes
-npm run k8s:status               # Check status
-
-npm run terraform:plan           # Plan infrastructure
-npm run terraform:apply          # Deploy to AWS
-```
-
-## 📚 Documentation
-
-- [Docker Setup](DOCKER-SETUP.md)
-- [Kubernetes Guide](K8S-GUIDE.md)
-- [AWS Deployment](AWS-GUIDE.md)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Make changes
-4. Submit pull request
-
-## 📄 License
-
-MIT License - see LICENSE file for details. 
+<p><img align="center" src="https://github-readme-stats.vercel.app/api/top-langs?username=nourhb&show_icons=true&locale=en&layout=compact" alt="nourhb" /></p> 
