@@ -196,7 +196,6 @@ export function HeroHeader() {
         color="bg-purple-500/20" 
       />
 
-      {/* Main content */}
       <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
         {/* Logo/Icon */}
         <motion.div

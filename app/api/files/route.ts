@@ -15,6 +15,10 @@ const s3Client = new S3Client({
 
 export async function GET() {
   try {
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET_NAME) {
+      return NextResponse.json({ error: "AWS S3 not configured" }, { status: 500 })
+    }
+
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME || "",
       Prefix: "files/", // Only list files in the files/ directory
@@ -59,6 +63,10 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET_NAME) {
+      return NextResponse.json({ error: "AWS S3 not configured" }, { status: 500 })
+    }
+
     const formData = await request.formData()
     const file = formData.get("file") as File
 

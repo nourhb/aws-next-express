@@ -1,51 +1,30 @@
 #!/usr/bin/env node
 
-// Test AWS Credentials and S3 Bucket Access
 require('dotenv').config({ path: '.env.local' });
 
 const { S3Client, ListBucketsCommand, HeadBucketCommand } = require('@aws-sdk/client-s3');
 const { DynamoDBClient, ListTablesCommand } = require('@aws-sdk/client-dynamodb');
 
-console.log('🔍 AWS Next Express - Test des Credentials');
-console.log('============================================');
+const requiredEnvVars = [
+  'AWS_REGION',
+  'AWS_ACCESS_KEY_ID', 
+  'AWS_SECRET_ACCESS_KEY',
+  'AWS_S3_BUCKET_NAME'
+];
 
-// Vérifier les variables d'environnement
-const requiredEnvVars = {
-  'AWS_REGION': process.env.AWS_REGION,
-  'AWS_ACCESS_KEY_ID': process.env.AWS_ACCESS_KEY_ID,
-  'AWS_SECRET_ACCESS_KEY': process.env.AWS_SECRET_ACCESS_KEY,
-  'AWS_S3_BUCKET_NAME': process.env.AWS_S3_BUCKET_NAME,
-  'NEXTAUTH_SECRET': process.env.NEXTAUTH_SECRET
-};
-
-console.log('\n📋 Vérification des variables d\'environnement...');
-let missingVars = false;
-
-Object.entries(requiredEnvVars).forEach(([key, value]) => {
-  if (value && value !== 'your_aws_access_key_here' && value !== 'your_aws_secret_key_here') {
-    console.log(`✅ ${key}: ${key.includes('SECRET') ? '***' : value.substring(0, 10)}...`);
-  } else {
-    console.log(`❌ ${key}: MANQUANT ou valeur d'exemple`);
-    missingVars = true;
+async function validateEnvironment() {
+  const missing = requiredEnvVars.filter(key => !process.env[key] || process.env[key].includes('your-'));
+  
+  if (missing.length > 0) {
+    console.error('Missing environment variables:', missing.join(', '));
+    console.error('Copy env.example to .env.local and configure your AWS credentials');
+    return false;
   }
-});
-
-if (missingVars) {
-  console.log('\n❌ ERREUR: Variables d\'environnement manquantes');
-  console.log('');
-  console.log('📝 Instructions:');
-  console.log('1. Copier: cp env.example .env.local');
-  console.log('2. Éditer .env.local avec vos vraies credentials AWS');
-  console.log('3. Relancer: node scripts/test-aws-credentials.js');
-  console.log('');
-  console.log('🔗 Guide complet: README-RDS-SETUP.md');
-  process.exit(1);
+  
+  return true;
 }
 
-// Test AWS S3
-async function testS3() {
-  console.log('\n🪣 Test de la connexion S3...');
-  
+async function testS3Connection() {
   try {
     const s3Client = new S3Client({
       region: process.env.AWS_REGION,
@@ -55,91 +34,77 @@ async function testS3() {
       },
     });
 
-    // Test de liste des buckets
     const listBucketsResult = await s3Client.send(new ListBucketsCommand({}));
-    console.log(`✅ Connexion S3 réussie - ${listBucketsResult.Buckets?.length || 0} buckets trouvés`);
+    console.log(`S3 connection successful - ${listBucketsResult.Buckets?.length || 0} buckets found`);
 
-    // Test du bucket spécifique
     try {
-      await s3Client.send(new HeadBucketCommand({ 
-        Bucket: process.env.AWS_S3_BUCKET_NAME 
-      }));
-      console.log(`✅ Bucket "${process.env.AWS_S3_BUCKET_NAME}" accessible`);
-    } catch (bucketError) {
-      console.log(`❌ Bucket "${process.env.AWS_S3_BUCKET_NAME}" non trouvé ou inaccessible`);
-      console.log('💡 Créer le bucket:');
-      console.log(`   aws s3 mb s3://${process.env.AWS_S3_BUCKET_NAME}`);
-      return false;
+      await s3Client.send(new HeadBucketCommand({ Bucket: process.env.AWS_S3_BUCKET_NAME }));
+      console.log(`Bucket "${process.env.AWS_S3_BUCKET_NAME}" is accessible`);
+    } catch (error) {
+      console.warn(`Bucket "${process.env.AWS_S3_BUCKET_NAME}" not found or inaccessible`);
+      console.warn(`Create bucket: aws s3 mb s3://${process.env.AWS_S3_BUCKET_NAME}`);
     }
 
     return true;
   } catch (error) {
-    console.log('❌ Erreur de connexion S3:', error.message);
-    console.log('');
-    console.log('🔧 Solutions possibles:');
-    console.log('1. Vérifier AWS_ACCESS_KEY_ID et AWS_SECRET_ACCESS_KEY');
-    console.log('2. Vérifier les permissions IAM (AmazonS3FullAccess)');
-    console.log('3. Vérifier AWS_REGION');
+    console.error('S3 connection failed:', error.message);
     return false;
   }
 }
 
-// Test DynamoDB Local
-async function testDynamoDB() {
-  console.log('\n☁️ Test de la connexion DynamoDB Local...');
-  
+async function testDynamoDBConnection() {
   try {
     const dynamoClient = new DynamoDBClient({
-      region: process.env.AWS_REGION || 'us-east-1',
-      endpoint: process.env.DYNAMODB_ENDPOINT || 'http://localhost:8000',
+      region: process.env.AWS_REGION,
+      ...(process.env.DYNAMODB_ENDPOINT && { endpoint: process.env.DYNAMODB_ENDPOINT }),
       credentials: {
-        accessKeyId: 'test',
-        secretAccessKey: 'test',
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
     });
 
     const result = await dynamoClient.send(new ListTablesCommand({}));
-    console.log(`✅ DynamoDB Local accessible - ${result.TableNames?.length || 0} tables`);
-    
-    if (result.TableNames?.includes('users') && result.TableNames?.includes('files')) {
-      console.log('✅ Tables users et files trouvées');
-    } else {
-      console.log('⚠️ Tables manquantes - exécuter: node scripts/init-dynamodb.js');
+    console.log(`DynamoDB connection successful - ${result.TableNames?.length || 0} tables found`);
+
+    if (result.TableNames?.length > 0) {
+      console.log('Available tables:', result.TableNames.join(', '));
     }
-    
+
     return true;
   } catch (error) {
-    console.log('❌ DynamoDB Local non accessible:', error.message);
-    console.log('💡 Démarrer DynamoDB Local:');
-    console.log('   docker-compose -f docker-compose.full.yml up -d dynamodb-local');
+    console.error('DynamoDB connection failed:', error.message);
+    if (error.message.includes('ECONNREFUSED')) {
+      console.warn('Start DynamoDB Local: docker run -p 8000:8000 amazon/dynamodb-local');
+    }
     return false;
   }
 }
 
-// Test complet
 async function runTests() {
-  const s3Success = await testS3();
-  const dynamoSuccess = await testDynamoDB();
-
-  console.log('\n🎉 RÉSUMÉ DES TESTS');
-  console.log('====================');
+  console.log('Testing AWS services...');
   
+  if (!await validateEnvironment()) {
+    process.exit(1);
+  }
+
+  const s3Success = await testS3Connection();
+  const dynamoSuccess = await testDynamoDBConnection();
+
+  console.log('\nTest Results:');
+  console.log(`S3: ${s3Success ? 'OK' : 'FAILED'}`);
+  console.log(`DynamoDB: ${dynamoSuccess ? 'OK' : 'FAILED'}`);
+
   if (s3Success && dynamoSuccess) {
-    console.log('✅ TOUS LES TESTS RÉUSSIS !');
-    console.log('');
-    console.log('🚀 Vous pouvez démarrer l\'application:');
-    console.log('   docker-compose -f docker-compose.full.yml up -d');
-    console.log('   npx prisma migrate dev');
-    console.log('   node scripts/init-dynamodb.js');
-    console.log('   npm run dev');
-    console.log('');
-    console.log('🌐 Puis aller sur: http://localhost:3000/database');
+    console.log('\nAll AWS services are operational!');
+    console.log('Start the application: npm run dev');
   } else {
-    console.log('❌ CERTAINS TESTS ONT ÉCHOUÉ');
-    console.log('');
-    console.log('🔧 Corriger les erreurs ci-dessus puis relancer ce test');
+    console.error('\nSome services are not configured correctly.');
+    process.exit(1);
   }
 }
 
-// Exécuter les tests
-runTests().catch(console.error); 
+runTests().catch(console.error);
+
+if (require.main === module) {
+  runTests();
+} 

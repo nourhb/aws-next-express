@@ -179,7 +179,7 @@ resource "aws_instance" "app_server" {
   subnet_id              = data.aws_subnets.default.ids[0]
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
-  user_data = base64encode(templatefile("${path.module}/user_data_minimal.sh", {
+  user_data = base64encode(templatefile("${path.module}/user_data_simple_static.sh", {
     s3_bucket_name = var.s3_bucket_name
     aws_region     = var.aws_region
     github_repo    = var.github_repo

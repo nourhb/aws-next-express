@@ -10,10 +10,15 @@ const s3Client = new S3Client({
   },
 })
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_S3_BUCKET_NAME) {
+      return NextResponse.json({ error: "AWS S3 not configured" }, { status: 500 })
+    }
+
+    const { id } = await params
     // The ID is the full S3 key
-    const key = decodeURIComponent(params.id)
+    const key = decodeURIComponent(id)
 
     const deleteParams = {
       Bucket: process.env.AWS_S3_BUCKET_NAME || "",

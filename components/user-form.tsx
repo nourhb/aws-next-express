@@ -150,9 +150,18 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
       }
     } catch (error) {
       console.error(error)
+      let errorMessage = `Une erreur est survenue lors de ${isEditing ? 'la mise à jour' : 'l\'ajout'} de l'utilisateur`
+      
+      // Handle specific error types
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        errorMessage = "Impossible de se connecter au serveur. Vérifiez que le serveur de développement est en cours d'exécution."
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+      
       toast({
         title: "Erreur",
-        description: `Une erreur est survenue lors de ${isEditing ? 'la mise à jour' : 'l\'ajout'} de l'utilisateur`,
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {

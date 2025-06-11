@@ -15,18 +15,19 @@ const s3Client = new S3Client({
 // GET - Get user by ID from DynamoDB
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await dynamoService.getUserById(params.id)
+    const { id } = await params
+    const user = await dynamoService.getUserById(id)
     
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
     return NextResponse.json(user)
-  } catch (error) {
-    console.error("Error fetching user from DynamoDB:", error)
+  } catch (err) {
+    console.error("Error fetching user from DynamoDB:", err)
     return NextResponse.json({ error: "Failed to fetch user from DynamoDB" }, { status: 500 })
   }
 }
@@ -34,24 +35,24 @@ export async function GET(
 // PUT - Update user in DynamoDB
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const formData = await request.formData()
     const name = formData.get("name") as string
     const email = formData.get("email") as string
     const profilePicture = formData.get("profilePicture") as File
 
     // Get existing user
-    const existingUser = await dynamoService.getUserById(params.id)
+    const existingUser = await dynamoService.getUserById(id)
     if (!existingUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    // Check if new email conflicts with another user
     if (email && email !== existingUser.email) {
       const userWithEmail = await dynamoService.getUserByEmail(email)
-      if (userWithEmail && userWithEmail.id !== params.id) {
+      if (userWithEmail && userWithEmail.id !== id) {
         return NextResponse.json({ error: "Email already exists" }, { status: 409 })
       }
     }
@@ -95,7 +96,7 @@ export async function PUT(
     }
 
     // Update user in DynamoDB
-    const updatedUser = await dynamoService.updateUser(params.id, {
+    const updatedUser = await dynamoService.updateUser(id, {
       ...(name && { name }),
       ...(email && { email }),
       profilePictureUrl,
@@ -106,8 +107,8 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedUser)
-  } catch (error) {
-    console.error("Error updating user in DynamoDB:", error)
+  } catch (err) {
+    console.error("Error updating user in DynamoDB:", err)
     return NextResponse.json({ error: "Failed to update user in DynamoDB" }, { status: 500 })
   }
 }
@@ -115,11 +116,12 @@ export async function PUT(
 // DELETE - Delete user from DynamoDB
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     // Get user to delete profile picture from S3
-    const existingUser = await dynamoService.getUserById(params.id)
+    const existingUser = await dynamoService.getUserById(id)
     if (!existingUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
@@ -141,15 +143,15 @@ export async function DELETE(
     }
 
     // Delete user from DynamoDB
-    const success = await dynamoService.deleteUser(params.id)
+    const success = await dynamoService.deleteUser(id)
     
     if (!success) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
     return NextResponse.json({ message: "User deleted successfully" })
-  } catch (error) {
-    console.error("Error deleting user from DynamoDB:", error)
+  } catch (err) {
+    console.error("Error deleting user from DynamoDB:", err)
     return NextResponse.json({ error: "Failed to delete user from DynamoDB" }, { status: 500 })
   }
 } 

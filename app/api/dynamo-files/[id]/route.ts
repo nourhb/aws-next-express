@@ -13,11 +13,16 @@ const s3Client = new S3Client({
 
 export async function DELETE(
   request: NextRequest, 
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      return NextResponse.json({ error: "AWS credentials not configured" }, { status: 500 })
+    }
+
+    const { id } = await params
     // Get file from DynamoDB first
-    const file = await dynamoService.getFileById(params.id)
+    const file = await dynamoService.getFileById(id)
     
     if (!file) {
       return NextResponse.json({ error: "File not found" }, { status: 404 })
@@ -33,11 +38,10 @@ export async function DELETE(
       await s3Client.send(new DeleteObjectCommand(deleteParams))
     } catch (s3Error) {
       console.warn("Could not delete file from S3:", s3Error)
-      // Continue to delete from DynamoDB even if S3 delete fails
     }
 
     // Delete file record from DynamoDB
-    const success = await dynamoService.deleteFile(params.id)
+    const success = await dynamoService.deleteFile(id)
     
     if (!success) {
       return NextResponse.json({ error: "File not found in DynamoDB" }, { status: 404 })

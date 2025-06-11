@@ -15,10 +15,11 @@ const s3Client = new S3Client({
 // GET - Get user by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = parseInt(params.id)
+    const { id } = await params
+    const userId = parseInt(id)
     
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 })
@@ -31,8 +32,8 @@ export async function GET(
     }
 
     return NextResponse.json(user)
-  } catch (error) {
-    console.error("Error fetching user:", error)
+  } catch (err) {
+    console.error("Error fetching user:", err)
     return NextResponse.json({ error: "Failed to fetch user" }, { status: 500 })
   }
 }
@@ -40,10 +41,11 @@ export async function GET(
 // PUT - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = parseInt(params.id)
+    const { id } = await params
+    const userId = parseInt(id)
     
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 })
@@ -110,11 +112,10 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedUser)
-  } catch (error) {
-    console.error("Error updating user:", error)
+  } catch (err: any) {
+    console.error("Error updating user:", err)
     
-    // Handle unique constraint violation for email
-    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+    if (err.code === 'P2002' && err.meta?.target?.includes('email')) {
       return NextResponse.json({ error: "Email already exists" }, { status: 409 })
     }
     
@@ -125,10 +126,11 @@ export async function PUT(
 // DELETE - Delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const userId = parseInt(params.id)
+    const { id } = await params
+    const userId = parseInt(id)
     
     if (isNaN(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 })
@@ -160,8 +162,8 @@ export async function DELETE(
     await deleteUser(userId)
 
     return NextResponse.json({ message: "User deleted successfully" })
-  } catch (error) {
-    console.error("Error deleting user:", error)
+  } catch (err) {
+    console.error("Error deleting user:", err)
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 })
   }
 }
