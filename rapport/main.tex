@@ -1,0 +1,370 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{parskip}
+
+% Page geometry with better margins
+\geometry{left=3cm,right=2.5cm,top=3cm,bottom=3cm}
+
+% Define beautiful colors
+\definecolor{primaryblue}{RGB}{41, 128, 185}
+\definecolor{secondaryblue}{RGB}{52, 152, 219}
+\definecolor{darkblue}{RGB}{44, 62, 80}
+\definecolor{lightgray}{RGB}{236, 240, 241}
+\definecolor{darkgray}{RGB}{127, 140, 141}
+\definecolor{accentgreen}{RGB}{39, 174, 96}
+\definecolor{accentorange}{RGB}{230, 126, 34}
+
+% Line spacing
+\onehalfspacing
+
+% Enhanced header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{primaryblue}\small\textbf{\leftmark}}
+\fancyhead[R]{\color{darkgray}\small DigitalFromScratch}
+\fancyfoot[C]{\color{primaryblue}\textbf{\thepage}}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryblue}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{lightgray}\leaders\hrule height \footrulewidth\hfill}}
+
+% Beautiful chapter formatting
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{primaryblue}}
+{\tikz[remember picture,overlay] \node[fill=primaryblue,text=white,font=\Large\bfseries,inner sep=8pt,rounded corners=5pt] at (current page.north east) {\arabic{chapter}};}
+{20pt}
+{\Huge\color{darkblue}}
+[\vspace{10pt}{\titlerule[2pt]}]
+
+\titlespacing*{\chapter}{0pt}{30pt}{40pt}
+
+% Beautiful section formatting
+\titleformat{\section}
+{\Large\bfseries\color{primaryblue}}
+{\thesection}{1em}{}
+[\vspace{5pt}{\color{secondaryblue}\titlerule[1pt]}]
+
+% Beautiful subsection formatting
+\titleformat{\subsection}
+{\large\bfseries\color{darkblue}}
+{\thesubsection}{1em}{}
+
+% Enhanced hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    filecolor=accentorange,      
+    urlcolor=secondaryblue,
+    citecolor=darkblue,
+    bookmarksnumbered=true,
+    bookmarksopen=true,
+    pdftitle={Projet de Fin d'Année - AWS Next.js Express},
+    pdfauthor={Nour Houda BG},
+    pdfsubject={Développement et déploiement d'une application web full-stack}
+}
+
+% Beautiful table of contents
+\renewcommand{\cftchapfont}{\bfseries\color{primaryblue}}
+\renewcommand{\cftsecfont}{\color{darkblue}}
+\renewcommand{\cftsubsecfont}{\color{darkgray}}
+\renewcommand{\cftchappagefont}{\bfseries\color{primaryblue}}
+\renewcommand{\cftsecpagefont}{\color{darkblue}}
+\renewcommand{\cftsubsecpagefont}{\color{darkgray}}
+
+% Enhanced list formatting
+\setlist[itemize,1]{label=\textcolor{primaryblue}{\faChevronRight}, leftmargin=1.5em}
+\setlist[itemize,2]{label=\textcolor{secondaryblue}{\faCircle[regular]}, leftmargin=2em}
+\setlist[enumerate,1]{label=\textcolor{primaryblue}{\arabic*.}, leftmargin=1.5em}
+
+% Beautiful boxes for important content
+\newtcolorbox{infobox}[1][]{
+    colback=lightgray,
+    colframe=primaryblue,
+    fonttitle=\bfseries\color{white},
+    title=#1,
+    rounded corners,
+    boxrule=2pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt
+}
+
+\newtcolorbox{warningbox}[1][]{
+    colback=accentorange!10,
+    colframe=accentorange,
+    fonttitle=\bfseries\color{white},
+    title=#1,
+    rounded corners,
+    boxrule=2pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt
+}
+
+\begin{document}
+
+% Beautiful title page
+\begin{titlepage}
+    \tikz[remember picture,overlay] {
+        \fill[primaryblue] (current page.north west) rectangle ([yshift=-3cm]current page.north east);
+        \fill[secondaryblue] ([yshift=-3cm]current page.north west) rectangle ([yshift=-4cm]current page.north east);
+    }
+    
+    \vspace*{1cm}
+    \centering
+    
+    {\color{white}\Large\bfseries Ministère de l'Enseignement Supérieur\\
+    et de la Recherche Scientifique}
+    
+    \vspace{0.5cm}
+    
+    {\color{white}\large\bfseries Université ITeam}
+    
+    \vspace{3cm}
+    
+    \begin{tcolorbox}[colback=white, colframe=primaryblue, boxrule=3pt, rounded corners=10pt, width=0.9\textwidth]
+        \centering
+        {\huge\bfseries\color{primaryblue} Projet de Fin d'Année}
+        
+        \vspace{0.5cm}
+        
+        {\large\color{darkblue} Préparé en vue de l'obtention du diplôme National d'Ingénieur\\
+        en Informatique – Option : Cloud Computing et\\
+        Virtualisation}
+    \end{tcolorbox}
+    
+    \vspace{2cm}
+    
+    \begin{tcolorbox}[colback=lightgray, colframe=darkblue, boxrule=2pt, rounded corners=8pt, width=0.8\textwidth]
+        \centering
+        {\LARGE\bfseries\color{darkblue} Développement et déploiement d'une\\
+        application web full-stack avec AWS, Next.js\\
+        et infrastructure DevOps moderne}
+    \end{tcolorbox}
+    
+    \vspace{2cm}
+    
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        {\large\bfseries\color{primaryblue} \faUser\ Réalisé par :}\\
+        {\Large\bfseries\color{darkblue} Nour Houda BG}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        {\large\bfseries\color{primaryblue} \faBuilding\ Organisme d'accueil :}\\
+        {\Large\bfseries\color{darkblue} DigitalFromScratch}
+    \end{minipage}
+    
+    \vspace{1.5cm}
+    
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        {\large\bfseries\color{primaryblue} \faChalkboardTeacher\ Encadrante pédagogique :}\\
+        {\large\color{darkblue} [Nom de l'encadrante]}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        {\large\bfseries\color{primaryblue} \faBriefcase\ Encadrante professionnelle :}\\
+        {\large\color{darkblue} [Nom de l'encadrante]}
+    \end{minipage}
+    
+    \vfill
+    
+    \begin{tcolorbox}[colback=primaryblue, colframe=primaryblue, rounded corners=5pt]
+        \centering
+        {\large\bfseries\color{white} \faCalendarAlt\ Année universitaire : 2024-2025}
+    \end{tcolorbox}
+    
+\end{titlepage}
+
+% French abstract with beautiful formatting
+\chapter*{\color{primaryblue}\faFileAlt\ Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+\begin{infobox}[Contexte du projet]
+Ce projet de fin d'année avait pour objectif de développer et déployer une application web full-stack moderne en utilisant des technologies de pointe telles que Next.js et les services AWS. L'objectif principal était de créer une plateforme évolutive et sécurisée en appliquant les meilleures pratiques DevOps et CI/CD.
+\end{infobox}
+
+Le projet s'est déroulé sur une période de \textbf{\color{primaryblue}3 semaines} au sein de l'entreprise \textbf{\color{primaryblue}DigitalFromScratch}. Nous avons analysé les besoins, conçu l'architecture, puis développé l'application avec Next.js pour le frontend et les API Routes pour le backend. 
+
+Les services AWS comme \textcolor{accentgreen}{\textbf{DynamoDB}} et \textcolor{accentgreen}{\textbf{S3}} ont été intégrés pour la gestion des données et des fichiers. Une attention particulière a été portée à la sécurité et aux performances. 
+
+À la fin du projet, nous avons atteint nos objectifs en implémentant une application web moderne et évolutive avec une infrastructure DevOps complète.
+
+\begin{tcolorbox}[colback=accentgreen!10, colframe=accentgreen, title=\textcolor{white}{\faTags\ Mots clés}, fonttitle=\bfseries]
+\textbf{Next.js} • \textbf{AWS} • \textbf{DynamoDB} • \textbf{S3} • \textbf{DevOps} • \textbf{CI/CD} • \textbf{Docker} • \textbf{Kubernetes} • \textbf{Terraform} • \textbf{TypeScript}
+\end{tcolorbox}
+
+% Beautiful dedication
+\newpage
+\chapter*{\color{primaryblue}\faHeart\ Dédicaces}
+\addcontentsline{toc}{chapter}{Dédicaces}
+
+\begin{center}
+\begin{tcolorbox}[colback=lightgray, colframe=primaryblue, boxrule=2pt, rounded corners=10pt, width=0.8\textwidth]
+\centering
+\textit{\large\color{darkblue}
+À mes chers parents, pour leur soutien indéfectible et leur amour inconditionnel qui ont été ma source d'inspiration tout au long de ce parcours.
+
+\vspace{0.5cm}
+
+À ma famille, pour ses encouragements constants et sa présence précieuse dans chaque étape de ma vie.
+
+\vspace{0.5cm}
+
+À mes amis fidèles, dont le soutien et les conseils m'ont apporté force et motivation.
+
+\vspace{0.5cm}
+
+À tous ceux qui ont contribué de près ou de loin à la réalisation de ce projet.}
+\end{tcolorbox}
+\end{center}
+
+% Beautiful acknowledgments
+\newpage
+\chapter*{\color{primaryblue}\faHandshake\ Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+
+Je tiens à exprimer ma profonde gratitude à toutes les personnes qui ont contribué à la réalisation de ce travail.
+
+\begin{itemize}
+    \item Je suis particulièrement reconnaissant envers mon \textbf{\color{primaryblue}encadrante académique}, pour avoir accepté de superviser ce travail et de l'enrichir de ses conseils précieux.
+
+    \item Mes sincères remerciements vont également à mon \textbf{\color{primaryblue}encadrante professionnelle} chez \textbf{\color{accentgreen}DigitalFromScratch}, pour son accueil et son soutien continu tout au long de ces 3 semaines de projet.
+
+    \item Je tiens également à exprimer mon respect à toute l'\textbf{\color{primaryblue}équipe de DigitalFromScratch} qui a facilité la réalisation de ce projet et partagé son expérience avec moi.
+
+    \item Enfin, j'adresse mes remerciements aux \textbf{\color{primaryblue}membres du jury} pour avoir évalué ce travail et aux \textbf{\color{primaryblue}enseignants de l'Université ITeam} pour leur contribution à ma formation.
+\end{itemize}
+
+% Beautiful table of contents
+\newpage
+\renewcommand{\contentsname}{\color{primaryblue}\faList\ Table des matières}
+\tableofcontents
+
+% Beautiful list of figures
+\newpage
+\renewcommand{\listfigurename}{\color{primaryblue}\faImage\ Liste des figures}
+\listoffigures
+
+% Beautiful list of tables
+\newpage
+\renewcommand{\listtablename}{\color{primaryblue}\faTable\ Liste des tableaux}
+\listoftables
+
+% Beautiful list of abbreviations
+\newpage
+\chapter*{\color{primaryblue}\faBook\ Liste des abréviations}
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+
+\begin{description}[style=nextline, leftmargin=3cm, font=\color{primaryblue}\bfseries]
+\item[AWS] Amazon Web Services
+\item[API] Application Programming Interface
+\item[CI] Continuous Integration
+\item[CD] Continuous Delivery
+\item[S3] Simple Storage Service
+\item[DynamoDB] Amazon DynamoDB
+\item[DevOps] Development Operations
+\item[UI] User Interface
+\item[UX] User Experience
+\item[REST] Representational State Transfer
+\item[JSON] JavaScript Object Notation
+\item[HTTP] Hypertext Transfer Protocol
+\item[HTTPS] Hypertext Transfer Protocol Secure
+\item[JWT] JSON Web Token
+\item[CRUD] Create, Read, Update, Delete
+\item[SPA] Single Page Application
+\item[SSR] Server-Side Rendering
+\item[SSG] Static Site Generation
+\item[CDN] Content Delivery Network
+\item[VPC] Virtual Private Cloud
+\item[IAM] Identity and Access Management
+\item[EC2] Elastic Compute Cloud
+\item[Docker] Containerization Platform
+\item[Kubernetes] Container Orchestration
+\item[Terraform] Infrastructure as Code Tool
+\item[TypeScript] Typed JavaScript
+\item[Node.js] JavaScript Runtime
+\item[npm] Node Package Manager
+\item[Git] Version Control System
+\item[GitHub] Git Repository Hosting
+\end{description}
+
+% Beautiful general introduction
+\newpage
+\chapter*{\color{primaryblue}\faRocket\ Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+
+L'évolution rapide du domaine informatique a transformé la manière dont les entreprises développent et déploient leurs applications web. Cette transformation est marquée par une recherche constante d'optimisation où chaque organisation cherche à adopter des technologies innovantes et des pratiques de développement modernes.
+
+\begin{infobox}[Technologies modernes]
+Les technologies comme \textbf{Next.js} ont révolutionné le développement d'applications web en offrant des fonctionnalités avancées. Parallèlement, l'adoption des services cloud, notamment \textbf{Amazon Web Services (AWS)}, a transformé la façon dont les applications sont hébergées et mises à l'échelle.
+\end{infobox}
+
+L'intégration de pratiques \textcolor{accentgreen}{\textbf{DevOps}} et \textcolor{accentgreen}{\textbf{CI/CD}} est devenue essentielle pour assurer des déploiements rapides et fiables. La conteneurisation avec \textcolor{primaryblue}{\textbf{Docker}} et l'orchestration avec \textcolor{primaryblue}{\textbf{Kubernetes}} ont également révolutionné la façon dont les applications sont packagées et déployées.
+
+\begin{warningbox}[Objectif du projet]
+Le présent rapport se concentre sur le développement et le déploiement d'une application web full-stack moderne réalisée en \textbf{3 semaines} chez \textbf{DigitalFromScratch}. Ce projet vise à démontrer l'implémentation des meilleures pratiques actuelles en matière de développement web, d'architecture cloud et de déploiement automatisé.
+\end{warningbox}
+
+% Include chapters
+\input{chapters/chapter1}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+
+% Beautiful general conclusion
+\newpage
+\chapter*{\color{primaryblue}\faFlagCheckered\ Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+
+Le développement et le déploiement de cette application web full-stack moderne en \textbf{\color{primaryblue}3 semaines} chez \textbf{\color{accentgreen}DigitalFromScratch} ont permis de démontrer l'efficacité des technologies et pratiques actuelles. L'adoption de cette stack technologique a offert une solution robuste, évolutive et performante.
+
+\begin{infobox}[Résultats obtenus]
+L'intégration des services AWS a fourni une infrastructure cloud native capable de s'adapter aux besoins de l'application. La mise en place d'une infrastructure DevOps complète a transformé la manière dont l'application est développée, testée et déployée.
+\end{infobox}
+
+Le projet a été structuré selon une méthodologie rigoureuse adaptée au délai de 3 semaines, permettant une livraison efficace dans les temps impartis. La réalisation technique a démontré la faisabilité de cette approche moderne.
+
+En conclusion, ce projet a permis de créer une application web moderne qui respecte les standards actuels de l'industrie. La transformation vers une approche DevOps moderne a optimisé l'efficacité du développement.
+
+\begin{tcolorbox}[colback=accentgreen!10, colframe=accentgreen, title=\textcolor{white}{\faLightbulb\ Perspectives}, fonttitle=\bfseries]
+Pour l'avenir, plusieurs améliorations peuvent être envisagées :
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Monitoring avancé}} avec Prometheus et Grafana
+    \item \textcolor{primaryblue}{\textbf{Intégration de services d'intelligence artificielle}}
+    \item \textcolor{primaryblue}{\textbf{Optimisation des performances}}
+    \item \textcolor{primaryblue}{\textbf{Extension de la suite de tests automatisés}}
+    \item \textcolor{primaryblue}{\textbf{Déploiement multi-région}}
+\end{itemize}
+\end{tcolorbox}
+
+\end{document}

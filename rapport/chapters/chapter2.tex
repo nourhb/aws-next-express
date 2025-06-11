@@ -1,0 +1,304 @@
+\chapter{Étude préalable}
+
+\section{\faSearch\ Introduction}
+
+Ce chapitre présente l'étude préalable réalisée avant le développement de l'application. Il comprend l'analyse des technologies existantes, l'étude des solutions concurrentes, et la justification des choix techniques effectués pour le projet de \textbf{\color{primaryblue}3 semaines} chez \textcolor{accentgreen}{\textbf{DigitalFromScratch}}.
+
+\section{\faCode\ Technologies frontend modernes}
+
+\subsection{\faReact\ React et l'écosystème JavaScript}
+
+\begin{infobox}[React - La référence frontend]
+React est devenu la référence pour le développement d'interfaces utilisateur modernes. Son approche basée sur les composants et son écosystème riche en font un choix privilégié pour les applications web.
+\end{infobox}
+
+\textbf{\color{primaryblue}Avantages de React :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Architecture basée sur les composants}}
+    \item \textcolor{accentgreen}{\textbf{Virtual DOM}} pour des performances optimales
+    \item \textcolor{accentgreen}{\textbf{Écosystème riche}} et communauté active
+    \item \textcolor{accentgreen}{\textbf{Réutilisabilité du code}}
+    \item \textcolor{accentgreen}{\textbf{Facilité de maintenance}}
+\end{itemize}
+
+\subsection{\faRocket\ Next.js : Framework React full-stack}
+
+Next.js étend React en proposant des fonctionnalités avancées pour le développement web moderne.
+
+\textbf{\color{primaryblue}Fonctionnalités clés de Next.js :}
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Server-Side Rendering (SSR)}} natif
+    \item \textcolor{primaryblue}{\textbf{Static Site Generation (SSG)}}
+    \item \textcolor{primaryblue}{\textbf{API Routes}} intégrées
+    \item \textcolor{primaryblue}{\textbf{Optimisation automatique}} des performances
+    \item \textcolor{primaryblue}{\textbf{Support TypeScript}} natif
+    \item \textcolor{primaryblue}{\textbf{App Router}} pour une navigation moderne
+\end{itemize}
+
+\begin{warningbox}[Avantages pour le projet]
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Développement full-stack}} avec un seul framework
+    \item \textcolor{accentgreen}{\textbf{SEO optimisé}} grâce au SSR
+    \item \textcolor{accentgreen}{\textbf{Performance élevée}}
+    \item \textcolor{accentgreen}{\textbf{Écosystème mature}}
+\end{itemize}
+\end{warningbox}
+
+\subsection{\faCode\ TypeScript}
+
+TypeScript apporte la sécurité des types au JavaScript, réduisant les erreurs et améliorant la maintenabilité.
+
+\textbf{\color{primaryblue}Bénéfices de TypeScript :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Détection d'erreurs}} à la compilation
+    \item \textcolor{accentgreen}{\textbf{Meilleure expérience}} de développement
+    \item \textcolor{accentgreen}{\textbf{Documentation automatique}} du code
+    \item \textcolor{accentgreen}{\textbf{Refactoring sécurisé}}
+    \item \textcolor{accentgreen}{\textbf{Intégration native}} avec Next.js
+\end{itemize}
+
+\section{\faCloud\ Services cloud AWS}
+
+\subsection{\faAws\ Amazon Web Services}
+
+\begin{infobox}[AWS - Leader du cloud]
+AWS est le leader du marché du cloud computing, offrant une gamme complète de services pour les applications modernes.
+\end{infobox}
+
+\textbf{\color{primaryblue}Avantages d'AWS :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Infrastructure mondiale}} et fiable
+    \item \textcolor{accentgreen}{\textbf{Large gamme de services}}
+    \item \textcolor{accentgreen}{\textbf{Modèle de tarification}} flexible
+    \item \textcolor{accentgreen}{\textbf{Sécurité et conformité}}
+    \item \textcolor{accentgreen}{\textbf{Écosystème d'outils}} et de partenaires
+\end{itemize}
+
+\subsection{\faDatabase\ Amazon DynamoDB}
+
+DynamoDB est une base de données NoSQL entièrement gérée, conçue pour les applications nécessitant des performances élevées.
+
+\textbf{\color{primaryblue}Caractéristiques de DynamoDB :}
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Performance prévisible}} et rapide
+    \item \textcolor{primaryblue}{\textbf{Scalabilité automatique}}
+    \item \textcolor{primaryblue}{\textbf{Sécurité intégrée}}
+    \item \textcolor{primaryblue}{\textbf{Sauvegarde et restauration}} automatiques
+    \item \textcolor{primaryblue}{\textbf{Intégration}} avec l'écosystème AWS
+\end{itemize}
+
+\textbf{\color{primaryblue}Cas d'usage appropriés :}
+\begin{itemize}
+    \item Applications web et mobiles
+    \item Jeux en ligne
+    \item IoT et données en temps réel
+    \item Applications nécessitant une faible latence
+\end{itemize}
+
+\subsection{\faHdd\ Amazon S3}
+
+S3 (Simple Storage Service) est un service de stockage d'objets hautement évolutif et durable.
+
+\textbf{\color{primaryblue}Fonctionnalités de S3 :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Durabilité}} de 99,999999999\% (11 9s)
+    \item \textcolor{accentgreen}{\textbf{Scalabilité illimitée}}
+    \item \textcolor{accentgreen}{\textbf{Classes de stockage}} multiples
+    \item \textcolor{accentgreen}{\textbf{Intégration}} avec CloudFront (CDN)
+    \item \textcolor{accentgreen}{\textbf{Sécurité et conformité}} avancées
+\end{itemize}
+
+\section{\faCogs\ Pratiques DevOps}
+
+\subsection{\faInfinity\ Intégration et déploiement continus (CI/CD)}
+
+\begin{infobox}[CI/CD - Automatisation essentielle]
+Les pratiques CI/CD automatisent le processus de développement, test et déploiement.
+\end{infobox}
+
+\textbf{\color{primaryblue}Bénéfices du CI/CD :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Réduction des erreurs}} humaines
+    \item \textcolor{accentgreen}{\textbf{Déploiements plus fréquents}} et fiables
+    \item \textcolor{accentgreen}{\textbf{Feedback rapide}} sur la qualité du code
+    \item \textcolor{accentgreen}{\textbf{Amélioration de la collaboration}} d'équipe
+\end{itemize}
+
+\subsection{\faGithub\ GitHub Actions}
+
+GitHub Actions offre une plateforme d'automatisation intégrée à GitHub.
+
+\textbf{\color{primaryblue}Avantages de GitHub Actions :}
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Intégration native}} avec GitHub
+    \item \textcolor{primaryblue}{\textbf{Marketplace d'actions}} réutilisables
+    \item \textcolor{primaryblue}{\textbf{Configuration simple}} avec YAML
+    \item \textcolor{primaryblue}{\textbf{Exécution parallèle}} des workflows
+    \item \textcolor{primaryblue}{\textbf{Support multi-plateforme}}
+\end{itemize}
+
+\section{\faDocker\ Conteneurisation}
+
+\subsection{\faDocker\ Docker}
+
+\begin{infobox}[Docker - Révolution du déploiement]
+Docker révolutionne le déploiement d'applications en utilisant la conteneurisation.
+\end{infobox}
+
+\textbf{\color{primaryblue}Avantages de Docker :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Portabilité}} entre environnements
+    \item \textcolor{accentgreen}{\textbf{Isolation}} des applications
+    \item \textcolor{accentgreen}{\textbf{Déploiement rapide}} et cohérent
+    \item \textcolor{accentgreen}{\textbf{Utilisation efficace}} des ressources
+    \item \textcolor{accentgreen}{\textbf{Écosystème riche}} d'images
+\end{itemize}
+
+\subsection{\faNetworkWired\ Orchestration avec Kubernetes}
+
+Kubernetes gère le déploiement et la mise à l'échelle des conteneurs.
+
+\textbf{\color{primaryblue}Fonctionnalités de Kubernetes :}
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Orchestration automatique}} des conteneurs
+    \item \textcolor{primaryblue}{\textbf{Auto-scaling}} basé sur la charge
+    \item \textcolor{primaryblue}{\textbf{Gestion des services}} et découverte
+    \item \textcolor{primaryblue}{\textbf{Rolling updates}} sans interruption
+    \item \textcolor{primaryblue}{\textbf{Gestion des secrets}} et configurations
+\end{itemize}
+
+\section{\faTools\ Infrastructure as Code}
+
+\subsection{\faTools\ Terraform}
+
+\begin{infobox}[Terraform - Infrastructure versionnée]
+Terraform permet de définir l'infrastructure comme du code, apportant versioning et reproductibilité.
+\end{infobox}
+
+\textbf{\color{primaryblue}Avantages de Terraform :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Infrastructure versionnée}}
+    \item \textcolor{accentgreen}{\textbf{Déploiements reproductibles}}
+    \item \textcolor{accentgreen}{\textbf{Support multi-cloud}}
+    \item \textcolor{accentgreen}{\textbf{Planification des changements}}
+    \item \textcolor{accentgreen}{\textbf{État centralisé}} de l'infrastructure
+\end{itemize}
+
+\begin{warningbox}[Bénéfices pour le projet]
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Gestion cohérente}} des ressources AWS
+    \item \textcolor{primaryblue}{\textbf{Facilité de réplication}} d'environnements
+    \item \textcolor{primaryblue}{\textbf{Documentation automatique}} de l'infrastructure
+    \item \textcolor{primaryblue}{\textbf{Rollback facilité}} en cas de problème
+\end{itemize}
+\end{warningbox}
+
+\section{\faShieldAlt\ Sécurité}
+
+\subsection{\faCloud\ Sécurité dans le cloud}
+
+La sécurité cloud suit le modèle de responsabilité partagée entre le fournisseur et le client.
+
+\textbf{\color{primaryblue}Principes de sécurité AWS :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Chiffrement des données}} au repos et en transit
+    \item \textcolor{accentgreen}{\textbf{Gestion des identités}} et accès (IAM)
+    \item \textcolor{accentgreen}{\textbf{Monitoring et audit}} continus
+    \item \textcolor{accentgreen}{\textbf{Isolation réseau}} avec VPC
+    \item \textcolor{accentgreen}{\textbf{Conformité}} aux standards internationaux
+\end{itemize}
+
+\subsection{\faLock\ Sécurité applicative}
+
+La sécurité doit être intégrée dès la conception de l'application.
+
+\textbf{\color{primaryblue}Bonnes pratiques de sécurité :}
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Authentification et autorisation}} robustes
+    \item \textcolor{primaryblue}{\textbf{Validation stricte}} des entrées
+    \item \textcolor{primaryblue}{\textbf{Protection}} contre les vulnérabilités OWASP
+    \item \textcolor{primaryblue}{\textbf{Chiffrement}} des données sensibles
+    \item \textcolor{primaryblue}{\textbf{Logs et monitoring}} de sécurité
+\end{itemize}
+
+\section{\faChartLine\ Monitoring et observabilité}
+
+\subsection{\faAws\ Amazon CloudWatch}
+
+CloudWatch fournit monitoring et observabilité pour les applications AWS.
+
+\textbf{\color{primaryblue}Fonctionnalités de CloudWatch :}
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Collecte de métriques}} et logs
+    \item \textcolor{accentgreen}{\textbf{Alertes automatiques}}
+    \item \textcolor{accentgreen}{\textbf{Dashboards personnalisables}}
+    \item \textcolor{accentgreen}{\textbf{Insights}} pour l'analyse des logs
+    \item \textcolor{accentgreen}{\textbf{Intégration}} avec tous les services AWS
+\end{itemize}
+
+\section{\faBalanceScale\ Analyse comparative}
+
+\subsection{Comparaison des approches}
+
+Le choix de la stack technologique s'est basé sur plusieurs critères :
+
+\begin{table}[H]
+\centering
+\caption{\color{primaryblue}Comparaison des approches technologiques}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\rowcolor{lightgray}
+\textbf{Critère} & \textbf{\color{primaryblue}Stack choisie} & \textbf{Alternative 1} & \textbf{Alternative 2} \\
+\hline
+Rapidité de développement & \textcolor{accentgreen}{\textbf{Excellent}} & Bon & Moyen \\
+\hline
+Performance & \textcolor{accentgreen}{\textbf{Excellent}} & Bon & Excellent \\
+\hline
+Scalabilité & \textcolor{accentgreen}{\textbf{Excellent}} & Moyen & Bon \\
+\hline
+Coût & \textcolor{accentgreen}{\textbf{Bon}} & Excellent & Moyen \\
+\hline
+Maintenance & \textcolor{accentgreen}{\textbf{Excellent}} & Moyen & Bon \\
+\hline
+Écosystème & \textcolor{accentgreen}{\textbf{Excellent}} & Bon & Moyen \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{\faCheckCircle\ Justification des choix}
+
+Les choix technologiques ont été guidés par les contraintes du projet de \textbf{\color{primaryblue}3 semaines} :
+
+\begin{infobox}[Next.js + TypeScript]
+\begin{itemize}
+    \item \textcolor{primaryblue}{\textbf{Développement rapide}} avec un seul framework
+    \item \textcolor{primaryblue}{\textbf{Sécurité des types}} pour réduire les bugs
+    \item \textcolor{primaryblue}{\textbf{Performance optimale}} pour l'expérience utilisateur
+\end{itemize}
+\end{infobox}
+
+\begin{infobox}[AWS (DynamoDB + S3)]
+\begin{itemize}
+    \item \textcolor{accentgreen}{\textbf{Services managés}} réduisant la complexité opérationnelle
+    \item \textcolor{accentgreen}{\textbf{Scalabilité automatique}} adaptée aux besoins
+    \item \textcolor{accentgreen}{\textbf{Intégration native}} entre services
+\end{itemize}
+\end{infobox}
+
+\begin{infobox}[Docker + GitHub Actions]
+\begin{itemize}
+    \item \textcolor{accentorange}{\textbf{Déploiement cohérent}} et reproductible
+    \item \textcolor{accentorange}{\textbf{Automatisation complète}} du pipeline
+    \item \textcolor{accentorange}{\textbf{Intégration native}} avec GitHub
+\end{itemize}
+\end{infobox}
+
+\section{\faCheckCircle\ Conclusion}
+
+Cette étude préalable a permis d'identifier les technologies les plus adaptées au projet de \textbf{\color{primaryblue}3 semaines} chez \textcolor{accentgreen}{\textbf{DigitalFromScratch}}. Les choix effectués privilégient la rapidité de développement, la performance et la maintenabilité.
+
+\begin{warningbox}[Stack technologique optimale]
+La stack technologique sélectionnée (Next.js, AWS, Docker, GitHub Actions) offre un équilibre optimal entre innovation, stabilité et productivité. Elle permet de répondre aux exigences du projet tout en respectant les contraintes de temps.
+\end{warningbox}
+
+Le chapitre suivant présentera la spécification détaillée des besoins et la conception de l'architecture basée sur ces choix technologiques.

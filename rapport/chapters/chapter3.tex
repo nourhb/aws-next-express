@@ -1,0 +1,334 @@
+\chapter{Spécification des besoins et conception}
+
+\section{Introduction}
+
+Ce chapitre présente l'analyse des besoins du projet et la conception de l'architecture de l'application. Il comprend l'identification des acteurs, la spécification des exigences, l'étude comparative des solutions techniques, et la conception de l'architecture système.
+
+\section{Identification des acteurs}
+
+\subsection{Acteurs principaux}
+
+L'analyse du système a permis d'identifier les acteurs suivants :
+
+\begin{enumerate}
+    \item \textbf{Utilisateur final} : Personne qui utilise l'application web
+    \item \textbf{Administrateur} : Responsable de la gestion de l'application
+    \item \textbf{Développeur} : Membre de l'équipe de développement
+    \item \textbf{Chef de projet} : Responsable du suivi du projet chez DigitalFromScratch
+\end{enumerate}
+
+\section{Analyse des besoins}
+
+\subsection{Besoins fonctionnels}
+
+Les besoins fonctionnels définissent les fonctionnalités que doit offrir l'application :
+
+\subsubsection{Gestion des utilisateurs}
+\begin{itemize}
+    \item Inscription des nouveaux utilisateurs
+    \item Authentification sécurisée
+    \item Gestion des profils utilisateurs
+    \item Réinitialisation des mots de passe
+\end{itemize}
+
+\subsubsection{Interface utilisateur}
+\begin{itemize}
+    \item Interface responsive adaptée aux différents appareils
+    \item Navigation intuitive et ergonomique
+    \item Notifications en temps réel
+    \item Indicateurs de chargement
+\end{itemize}
+
+\subsubsection{Gestion des données}
+\begin{itemize}
+    \item Création, lecture, mise à jour et suppression des données
+    \item Recherche et filtrage des données
+    \item Pagination des résultats
+    \item Export des données
+\end{itemize}
+
+\subsubsection{Gestion des fichiers}
+\begin{itemize}
+    \item Upload de fichiers
+    \item Prévisualisation des images
+    \item Validation des types de fichiers
+    \item Gestion des métadonnées
+\end{itemize}
+
+\subsection{Besoins non fonctionnels}
+
+Les besoins non fonctionnels définissent les contraintes de qualité du système :
+
+\subsubsection{Performance}
+\begin{itemize}
+    \item Temps de réponse inférieur à 2 secondes
+    \item Temps de chargement initial inférieur à 3 secondes
+    \item Support de 100 utilisateurs simultanés
+\end{itemize}
+
+\subsubsection{Sécurité}
+\begin{itemize}
+    \item Chiffrement HTTPS obligatoire
+    \item Protection contre les attaques communes
+    \item Audit des actions utilisateurs
+    \item Conformité aux bonnes pratiques de sécurité
+\end{itemize}
+
+\subsubsection{Disponibilité}
+\begin{itemize}
+    \item Disponibilité de 99\% minimum
+    \item Récupération automatique en cas de panne
+    \item Sauvegarde automatique des données
+\end{itemize}
+
+\subsubsection{Maintenabilité}
+\begin{itemize}
+    \item Code coverage minimum de 70\%
+    \item Documentation technique complète
+    \item Logs structurés et centralisés
+    \item Monitoring automatique
+\end{itemize}
+
+\section{Étude comparative des solutions}
+
+\subsection{Comparaison des frameworks frontend}
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des frameworks frontend}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Critère} & \textbf{Next.js} & \textbf{React} & \textbf{Vue.js} \\
+\hline
+Performance & Excellent & Bon & Bon \\
+\hline
+SEO & Excellent & Moyen & Moyen \\
+\hline
+Courbe d'apprentissage & Moyenne & Facile & Facile \\
+\hline
+Écosystème & Excellent & Excellent & Bon \\
+\hline
+TypeScript & Excellent & Bon & Bon \\
+\hline
+\textbf{Choix retenu} & \textbf{✓} & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Justification :} Next.js est retenu pour ses performances supérieures et son excellent support SEO.
+
+\subsection{Comparaison des bases de données}
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des solutions de base de données}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Critère} & \textbf{DynamoDB} & \textbf{MongoDB} & \textbf{PostgreSQL} \\
+\hline
+Scalabilité & Excellent & Bon & Moyen \\
+\hline
+Performance & Excellent & Bon & Bon \\
+\hline
+Gestion & Excellent & Moyen & Moyen \\
+\hline
+Intégration AWS & Excellent & Moyen & Moyen \\
+\hline
+\textbf{Choix retenu} & \textbf{✓} & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Justification :} DynamoDB est sélectionné pour sa scalabilité automatique et son intégration native avec AWS.
+
+\section{Conception de l'architecture}
+
+\subsection{Architecture générale}
+
+L'architecture de l'application suit le modèle en couches avec une séparation claire des responsabilités :
+
+\subsubsection{Architecture 3-tiers}
+
+\begin{enumerate}
+    \item \textbf{Couche de présentation} : Interface utilisateur développée avec Next.js
+    \item \textbf{Couche application} : Logique métier et APIs développées avec Next.js API Routes
+    \item \textbf{Couche données} : Persistance avec DynamoDB et stockage avec S3
+\end{enumerate}
+
+\subsection{Architecture technique détaillée}
+
+\subsubsection{Frontend}
+
+\textbf{Technologies utilisées :}
+\begin{itemize}
+    \item Next.js 14 avec App Router
+    \item TypeScript pour la sécurité des types
+    \item Tailwind CSS pour le styling
+    \item React Hook Form pour la gestion des formulaires
+\end{itemize}
+
+\subsubsection{Backend}
+
+\textbf{Technologies utilisées :}
+\begin{itemize}
+    \item Next.js API Routes pour les endpoints REST
+    \item NextAuth.js pour l'authentification
+    \item AWS SDK pour l'intégration des services AWS
+\end{itemize}
+
+\subsubsection{Base de données}
+
+\textbf{Amazon DynamoDB :}
+\begin{itemize}
+    \item Tables optimisées pour les patterns d'accès
+    \item Index secondaires pour les requêtes complexes
+    \item Chiffrement au repos activé
+    \item Sauvegarde automatique configurée
+\end{itemize}
+
+\textbf{Amazon S3 :}
+\begin{itemize}
+    \item Stockage des fichiers uploadés
+    \item Versioning activé
+    \item Chiffrement côté serveur
+\end{itemize}
+
+\subsection{Architecture d'infrastructure}
+
+\subsubsection{Composants AWS}
+
+L'infrastructure AWS comprend :
+
+\begin{itemize}
+    \item \textbf{Amazon ECS} : Conteneurs managés
+    \item \textbf{Application Load Balancer} : Répartition de charge
+    \item \textbf{Amazon VPC} : Réseau privé virtuel
+    \item \textbf{Amazon CloudWatch} : Monitoring et logs
+    \item \textbf{AWS IAM} : Gestion des accès
+\end{itemize}
+
+\subsubsection{Pipeline de déploiement}
+
+\begin{enumerate}
+    \item Commit du code sur GitHub
+    \item Déclenchement automatique du pipeline CI/CD
+    \item Tests automatisés
+    \item Construction de l'image Docker
+    \item Déploiement sur l'environnement cible
+    \item Tests post-déploiement
+\end{enumerate}
+
+\section{Modélisation des données}
+
+\subsection{Modèle conceptuel}
+
+Le modèle conceptuel identifie les entités principales :
+
+\textbf{Entités principales :}
+\begin{itemize}
+    \item \textbf{User} : Utilisateur de l'application
+    \item \textbf{Profile} : Profil utilisateur détaillé
+    \item \textbf{File} : Fichier uploadé par l'utilisateur
+    \item \textbf{Session} : Session d'authentification
+\end{itemize}
+
+\subsection{Modèle logique DynamoDB}
+
+\subsubsection{Table Users}
+
+\begin{table}[H]
+\centering
+\caption{Structure de la table Users}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+userId & String & Identifiant unique de l'utilisateur \\
+\hline
+email & String & Adresse email \\
+\hline
+username & String & Nom d'utilisateur \\
+\hline
+firstName & String & Prénom \\
+\hline
+lastName & String & Nom de famille \\
+\hline
+createdAt & String & Date de création \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Table Files}
+
+\begin{table}[H]
+\centering
+\caption{Structure de la table Files}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Attribut} & \textbf{Type} & \textbf{Description} \\
+\hline
+fileId & String & Identifiant unique du fichier \\
+\hline
+userId & String & Propriétaire du fichier \\
+\hline
+fileName & String & Nom original du fichier \\
+\hline
+fileSize & Number & Taille en bytes \\
+\hline
+mimeType & String & Type MIME du fichier \\
+\hline
+uploadedAt & String & Date d'upload \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Conception des interfaces}
+
+\subsection{Principes de design}
+
+\subsubsection{Design System}
+
+\begin{itemize}
+    \item Cohérence visuelle dans toute l'application
+    \item Accessibilité pour tous les utilisateurs
+    \item Design responsive pour tous les écrans
+    \item Interface intuitive et ergonomique
+\end{itemize}
+
+\subsubsection{Palette de couleurs}
+
+\begin{itemize}
+    \item \textbf{Primaire} : Bleu pour les actions principales
+    \item \textbf{Secondaire} : Gris pour les éléments secondaires
+    \item \textbf{Succès} : Vert pour les confirmations
+    \item \textbf{Erreur} : Rouge pour les erreurs
+\end{itemize}
+
+\subsection{Architecture des composants}
+
+\subsubsection{Composants de base}
+
+\begin{itemize}
+    \item \textbf{Button} : Boutons avec variantes et états
+    \item \textbf{Input} : Champs de saisie avec validation
+    \item \textbf{Modal} : Fenêtres modales réutilisables
+    \item \textbf{Card} : Conteneurs de contenu
+    \item \textbf{Table} : Tableaux de données
+\end{itemize}
+
+\subsubsection{Composants métier}
+
+\begin{itemize}
+    \item \textbf{UserProfile} : Profil utilisateur
+    \item \textbf{FileUploader} : Upload de fichiers
+    \item \textbf{Dashboard} : Tableau de bord principal
+    \item \textbf{Navigation} : Menu de navigation
+\end{itemize}
+
+\section{Conclusion}
+
+Ce chapitre a présenté une analyse des besoins et la conception de l'architecture de l'application. L'identification des acteurs, la spécification des exigences, ainsi que l'étude comparative des solutions techniques ont permis de faire des choix éclairés pour le projet de 3 semaines chez DigitalFromScratch.
+
+L'architecture proposée, basée sur Next.js et AWS, répond aux exigences de performance, sécurité et maintenabilité. La conception modulaire facilite le développement et la maintenance dans le délai imparti.
+
+Le chapitre suivant détaillera la phase de réalisation, incluant l'implémentation technique de cette architecture.
