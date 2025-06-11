@@ -2,10 +2,10 @@
 . "$(dirname "$0")/_/husky.sh"
 
 # Run linting
-pnpm lint
+npm run lint
 
 # Run type checking
-pnpm tsc --noEmit
+npx tsc --noEmit
 
 # Run tests
-pnpm test 
+npm test 

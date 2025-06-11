@@ -9,14 +9,8 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check if pnpm is installed
-if ! command -v pnpm &> /dev/null; then
-    echo "📦 Installing pnpm..."
-    npm install -g pnpm
-fi
-
 echo "📦 Installing dependencies..."
-pnpm install
+npm install
 
 echo "🐳 Starting Docker services..."
 docker-compose up -d
@@ -28,10 +22,10 @@ echo "🗄️ Initializing DynamoDB tables..."
 node scripts/init-dynamodb.js
 
 echo "🧪 Running tests..."
-pnpm test
+npm test
 
 echo "🏗️ Building application..."
-pnpm build
+npm run build
 
 echo "✅ Setup complete!"
 echo ""
@@ -40,11 +34,11 @@ echo "   - Frontend: http://localhost:3000"
 echo "   - DynamoDB Admin: http://localhost:8000"
 echo ""
 echo "🔧 Available commands:"
-echo "   - pnpm dev          # Start development server"
-echo "   - pnpm test         # Run tests"
-echo "   - pnpm build        # Build for production"
-echo "   - pnpm docker:build # Build Docker image"
-echo "   - pnpm k8s:deploy   # Deploy to Kubernetes"
+echo "   - npm run dev       # Start development server"
+echo "   - npm test          # Run tests"
+echo "   - npm run build     # Build for production"
+echo "   - npm run docker:build # Build Docker image"
+echo "   - npm run k8s:deploy   # Deploy to Kubernetes"
 echo ""
 echo "📚 Check README.md for detailed documentation"
 echo "🎉 Happy coding!" 

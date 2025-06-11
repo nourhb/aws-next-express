@@ -4,24 +4,20 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --production=false
+COPY package.json package-lock.json ./
+RUN npm ci --only=production=false
 
 # Stage 2: Builder
 FROM node:18-alpine AS builder
 WORKDIR /app
-RUN npm install -g pnpm
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED 1
-RUN pnpm build
+RUN npm run build
 
 # Stage 3: Production runner
 FROM node:18-alpine AS runner
@@ -44,9 +40,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 
 # Install production dependencies only
-RUN npm install -g pnpm prisma
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --production=true && pnpm store prune
+RUN npm install -g prisma
+COPY package.json package-lock.json ./
+RUN npm ci --only=production
 
 USER nextjs
 
